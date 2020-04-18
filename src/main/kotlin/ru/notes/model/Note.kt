@@ -10,9 +10,9 @@ import javax.persistence.Id
 data class Note(
         @Id
         @GeneratedValue(strategy = GenerationType.TABLE)
-        val id: Long,
-        val createDate: LocalDateTime,
+        var id: Long,
         var title: String,
-        var tag: String,
-        var description: String,
-        var modifyDate: LocalDateTime)
+        var tag: String?,
+        var description: String?,
+        var createDate: LocalDateTime?,
+        var modifyDate: LocalDateTime?)
