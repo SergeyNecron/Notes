@@ -15,4 +15,7 @@ data class Note(
         var tag: String?,
         var description: String?,
         var createDate: LocalDateTime?,
-        var modifyDate: LocalDateTime?)
+        var modifyDate: LocalDateTime?) {
+        constructor(id: Long, title: String)
+                : this(id, title,null,null,null, null)
+}
