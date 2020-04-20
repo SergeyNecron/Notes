@@ -1,6 +1,8 @@
 package ru.notes.model
 
+import ru.notes.dto.NoteDto
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -20,7 +22,18 @@ data class Note(
         var tag: String?,
         var description: String?,
         var createDate: LocalDateTime?,
-        var modifyDate: LocalDateTime?) {
-    constructor(id: Long, title: String)
-            : this(id, title, null, null, null, null)
+        var modifyDate: LocalDateTime?
+) {
+    companion object {
+        fun fromDto(noteDto: NoteDto): Note {
+            return Note(
+                    0L,// Generated
+                    noteDto.title,
+                    noteDto.tag,
+                    noteDto.description,
+                    LocalDateTime.now(),
+                    LocalDateTime.now()
+            )
+        }
+    }
 }

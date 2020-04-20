@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.notes.dto.NoteDto
 import ru.notes.exception.NotFoundException
-import ru.notes.exception.NoteServiceException
 import ru.notes.model.Note
 import ru.notes.repository.NoteRepository
 import java.time.LocalDateTime
@@ -44,16 +44,8 @@ class NoteServiceImpl
 
 
     @Transactional
-    override fun add(note: Note): Note {
-        if (noteRepository.existsById(note.id)) {
-            val message = "Note with id: " + note.id + " already exists"
-            log.error(message)
-            throw NoteServiceException(message)
-        }
-        note.createDate = LocalDateTime.now()
-        note.modifyDate = LocalDateTime.now()
-        return noteRepository.save(note)
-    }
+    override fun add(noteDto: NoteDto): Note =
+        noteRepository.save(Note.fromDto(noteDto))
 
     @Transactional
     override fun update(note: Note): Note {

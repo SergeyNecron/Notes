@@ -3,6 +3,7 @@ package ru.notes.service
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import ru.notes.dto.NoteDto
 import ru.notes.exception.NoteServiceException
 import ru.notes.model.Note
 
@@ -21,7 +22,7 @@ interface NoteService {
     fun get(id: Long): Note
 
     @Throws(NoteServiceException::class)
-    fun add(note: Note): Note
+    fun add(note: NoteDto): Note
 
     @Throws(NoteServiceException::class)
     fun update(note: Note): Note

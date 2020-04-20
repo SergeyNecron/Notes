@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.*
+import ru.notes.dto.NoteDto
 import ru.notes.exception.NoteServiceException
 import ru.notes.model.Note
 import ru.notes.service.NoteService
@@ -34,8 +35,8 @@ class NoteController @Autowired constructor(
 
     @PostMapping
     @Throws(NoteServiceException::class)
-    fun add(@RequestBody note: Note): ResponseEntity<Note> =
-            ok(noteService.add(note))
+    fun add(@RequestBody noteDto: NoteDto): ResponseEntity<Note> =
+            ok(noteService.add(noteDto))
 
     @PutMapping
     @Throws(NoteServiceException::class)
