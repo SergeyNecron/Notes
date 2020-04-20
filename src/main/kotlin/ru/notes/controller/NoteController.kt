@@ -3,12 +3,19 @@ package ru.notes.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.*
+import ru.notes.exception.NoteServiceException
 import ru.notes.model.Note
 import ru.notes.service.NoteService
+
+/**
+ *
+ * @author Sergey Muratkin
+ * Date: 2020-04-20
+ * Time: 09:40
+ */
 
 @RestController
 @RequestMapping("/note")
@@ -16,27 +23,32 @@ class NoteController @Autowired constructor(
         private val noteService: NoteService
 ) {
     @GetMapping
-    fun getAll(@PageableDefault pageable: Pageable): Page<Note> {
+    @Throws(NoteServiceException::class)
+    fun getAll(pageable: Pageable): Page<Note> {
         return noteService.getAll(pageable)
     }
 
     @GetMapping("{id}")
-    fun getById(@PathVariable("id") note: Note): Note {
-        return note
+    @Throws(NoteServiceException::class)
+    fun getById(@PathVariable("id") id: Long): Note {
+        return noteService.get(id)
     }
 
     @PostMapping
+    @Throws(NoteServiceException::class)
     fun add(@RequestBody note: Note): ResponseEntity<Note> =
             ok(noteService.add(note))
 
-    @PutMapping("{id}")
-    fun update(@PathVariable("id") id: Long, @RequestBody note: Note): Note {
-        note.id = id
+    @PutMapping
+    @Throws(NoteServiceException::class)
+    fun update(@RequestBody note: Note): Note {
         return noteService.update(note)
     }
 
     @DeleteMapping("{id}")
-    fun delete(@PathVariable("id") note: Note) {
-        noteService.delete(note)
+    @Throws(NoteServiceException::class)
+    fun delete(@PathVariable("id") id: Long): ResponseEntity<Boolean> {
+        noteService.delete(id)
+        return ok(true)
     }
 }

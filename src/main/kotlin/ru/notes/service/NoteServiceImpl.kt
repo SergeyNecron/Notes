@@ -1,53 +1,67 @@
 package ru.notes.service
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.transaction.annotation.Transactional
+import ru.notes.exception.NotFoundException
 import ru.notes.exception.NoteServiceException
 import ru.notes.model.Note
+import ru.notes.repository.NoteRepository
 import java.time.LocalDateTime
 
 @Service
 class NoteServiceImpl
-@Autowired
-constructor(private val noteRepository: ru.notes.repository.NoteRepository) : NoteService {
-    
-    @GetMapping
+@Autowired constructor(
+        private val noteRepository: NoteRepository
+) : NoteService {
+
+    companion object {
+        val log: Logger = LoggerFactory.getLogger(NoteServiceImpl::class.java)!!
+    }
+
+    @Transactional(readOnly = true)
     override fun getAll(pageable: Pageable): Page<Note> {
         return noteRepository.findAll(pageable)
     }
 
-    @GetMapping("{id}")
-    override fun getById(note: Note): Note {
-        return note
-    }
+    @Transactional(readOnly = true)
+    override fun get(id: Long): Note =
+            noteRepository
+                    .findById(id)
+                    .orElseThrow {
+                        log.error("Note with id: $id not found")
+                        NotFoundException(id)
+                    }
 
-    @PostMapping
+
+    @Transactional
     override fun add(note: Note): Note {
-        if (isExist(note))
-           throw NoteServiceException(message = "Product with id exist")
+        if (noteRepository.existsById(note.id)) {
+            val message = "Note with id: " + note.id + " already exists"
+            log.error(message)
+            throw NoteServiceException(message)
+        }
         note.createDate = LocalDateTime.now()
+        note.modifyDate = LocalDateTime.now()
         return noteRepository.save(note)
     }
 
-    @PutMapping("{id}")
+    @Transactional
     override fun update(note: Note): Note {
-        return noteRepository.save( note)
+        if (!noteRepository.existsById(note.id)) {
+            val message = "Note with id: " + note.id + " not found"
+            log.error(message)
+            throw NotFoundException(note.id)
+        }
+        note.modifyDate = LocalDateTime.now()
+        return noteRepository.save(note)
     }
 
-    @DeleteMapping("{id}")
-    override fun delete(note: Note) {
-        noteRepository.delete(note)
-    }
-
-    override fun isExist(note: Note): Boolean {
-        return noteRepository.findAll()
-                .map { it.id }
-                .contains(note.id)
-    }
+    @Transactional
+    override fun delete(id: Long) =
+            noteRepository.delete(get(id))
 }
