@@ -13,10 +13,8 @@ import ru.notes.service.NoteService
 /**
  *
  * @author Sergey Muratkin
- * Date: 2020-04-20
- * Time: 09:40
+ * Date: 2020-04-18
  */
-
 @RestController
 @RequestMapping("/note")
 class NoteController @Autowired constructor(

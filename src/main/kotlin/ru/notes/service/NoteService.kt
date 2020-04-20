@@ -6,6 +6,11 @@ import org.springframework.stereotype.Service
 import ru.notes.exception.NoteServiceException
 import ru.notes.model.Note
 
+/**
+ *
+ * @author Sergey Muratkin
+ * Date: 2020-04-18
+ */
 @Service
 interface NoteService {
 

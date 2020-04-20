@@ -13,6 +13,11 @@ import ru.notes.model.Note
 import ru.notes.repository.NoteRepository
 import java.time.LocalDateTime
 
+/**
+ *
+ * @author Sergey Muratkin
+ * Date: 2020-04-18
+ */
 @Service
 class NoteServiceImpl
 @Autowired constructor(

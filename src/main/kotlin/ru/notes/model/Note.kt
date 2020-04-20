@@ -6,6 +6,11 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 
+/**
+ *
+ * @author Sergey Muratkin
+ * Date: 2020-04-18
+ */
 @Entity
 data class Note(
         @Id
