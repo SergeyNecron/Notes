@@ -22,10 +22,10 @@ interface NoteService {
     fun get(id: Long): Note
 
     @Throws(NoteServiceException::class)
-    fun add(note: NoteDto): Note
+    fun add(noteDto: NoteDto): Note
 
     @Throws(NoteServiceException::class)
-    fun update(note: Note): Note
+    fun update(id: Long, noteDto: NoteDto): Note
 
     @Throws(NoteServiceException::class)
     fun delete(id: Long)

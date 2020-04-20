@@ -45,18 +45,11 @@ class NoteServiceImpl
 
     @Transactional
     override fun add(noteDto: NoteDto): Note =
-        noteRepository.save(Note.fromDto(noteDto))
+            noteRepository.save(Note(noteDto))
 
     @Transactional
-    override fun update(note: Note): Note {
-        if (!noteRepository.existsById(note.id)) {
-            val message = "Note with id: " + note.id + " not found"
-            log.error(message)
-            throw NotFoundException(note.id)
-        }
-        note.modifyDate = LocalDateTime.now()
-        return noteRepository.save(note)
-    }
+    override fun update(id: Long, noteDto: NoteDto): Note =
+            noteRepository.save(get(id).updateFromDto(noteDto))
 
     @Transactional
     override fun delete(id: Long) =

@@ -24,16 +24,19 @@ data class Note(
         var createDate: LocalDateTime?,
         var modifyDate: LocalDateTime?
 ) {
-    companion object {
-        fun fromDto(noteDto: NoteDto): Note {
-            return Note(
-                    0L,// Generated
-                    noteDto.title,
-                    noteDto.tag,
-                    noteDto.description,
-                    LocalDateTime.now(),
-                    LocalDateTime.now()
-            )
-        }
+    constructor(noteDto: NoteDto)
+            : this(0L,// Generated
+            noteDto.title,
+            noteDto.tag,
+            noteDto.description,
+            LocalDateTime.now(),
+            LocalDateTime.now()
+    )
+
+    fun updateFromDto(noteDto: NoteDto): Note {
+        this.title = noteDto.title
+        this.tag = noteDto.tag
+        this.description = noteDto.description
+        return this
     }
 }

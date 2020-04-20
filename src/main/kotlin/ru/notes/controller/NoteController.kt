@@ -27,7 +27,7 @@ class NoteController @Autowired constructor(
         return noteService.getAll(pageable)
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @Throws(NoteServiceException::class)
     fun getById(@PathVariable("id") id: Long): Note {
         return noteService.get(id)
@@ -38,13 +38,14 @@ class NoteController @Autowired constructor(
     fun add(@RequestBody noteDto: NoteDto): ResponseEntity<Note> =
             ok(noteService.add(noteDto))
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Throws(NoteServiceException::class)
-    fun update(@RequestBody note: Note): Note {
-        return noteService.update(note)
+    fun update(@PathVariable("id") id: Long,
+               @RequestBody noteDto: NoteDto): Note {
+        return noteService.update(id, noteDto)
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @Throws(NoteServiceException::class)
     fun delete(@PathVariable("id") id: Long): ResponseEntity<Boolean> {
         noteService.delete(id)
