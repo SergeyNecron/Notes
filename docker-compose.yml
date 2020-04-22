@@ -19,8 +19,6 @@ services:
     build: .
     ports:
       - 8080:8080
-    volumes:
-      - ./src/main/resources:/home/notes/src/main/resources
     restart: always
 volumes:
   notes_data:
