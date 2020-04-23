@@ -1,4 +1,4 @@
-version: "2.4"
+version: "3.3"
 services:
   pg:
     image: postgres:latest
@@ -11,7 +11,10 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: note
       PGDATA: /var/lib/postgresql/data/pgdata
-    mem_limit: 50m
+    deploy:
+      resources:
+        limits:
+          memory: 30M
     restart: always
   web:
     depends_on:
@@ -20,7 +23,12 @@ services:
     build: .
     ports:
       - 8080:8080
-    mem_limit: 510m
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 100M
     restart: always
 volumes:
   notes_data:
