@@ -1,4 +1,4 @@
-version: "3.7"
+version: "2.4"
 services:
   pg:
     image: postgres:latest
@@ -7,11 +7,12 @@ services:
       - 5432:5432
     volumes:
       - notes_data:/var/lib/postgresql/data/pgdata/
-    restart: always
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: note
       PGDATA: /var/lib/postgresql/data/pgdata
+    mem_limit: 50m
+    restart: always
   web:
     depends_on:
       - pg
@@ -19,6 +20,7 @@ services:
     build: .
     ports:
       - 8080:8080
+    mem_limit: 510m
     restart: always
 volumes:
   notes_data:
