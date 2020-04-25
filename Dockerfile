@@ -1,6 +1,6 @@
 FROM gradle:6.3-jdk11
 ENV PROJECT_DIR=/home/notes/
-COPY . ${PROJECT_DIR}
+RUN cd /home && git clone https://github.com/SergeyNecron/notes.git && cd notes/
 WORKDIR ${PROJECT_DIR}
 RUN chown gradle:gradle -R ${PROJECT_DIR}
 USER gradle
