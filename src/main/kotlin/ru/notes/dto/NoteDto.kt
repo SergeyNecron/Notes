@@ -1,8 +1,5 @@
 package ru.notes.dto
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import java.time.LocalDateTime
-
 /**
  *
  * @author Sergey Muratkin
