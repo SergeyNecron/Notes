@@ -3,6 +3,8 @@ package ru.notes.model
 import ru.notes.dto.NoteDto
 import java.time.LocalDateTime
 import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.ManyToOne
 
 /**
  *
@@ -13,7 +15,9 @@ import javax.persistence.Entity
 data class Note(
         var title: String?,
         var tag: String?,
-        var description: String?
+        var description: String?,
+        @ManyToOne(fetch = FetchType.LAZY)
+        private val user: User? = null
 ) : AbstractEntity() {
 
     constructor(noteDto: NoteDto) : this(
