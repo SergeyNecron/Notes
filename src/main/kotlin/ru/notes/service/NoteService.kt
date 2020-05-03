@@ -1,11 +1,9 @@
 package ru.notes.service
 
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import ru.notes.dto.NoteDto
+import ru.notes.dto.NoteDtoIn
+import ru.notes.dto.NoteDtoOut
 import ru.notes.exception.NoteServiceException
-import ru.notes.model.Note
 
 /**
  *
@@ -16,17 +14,20 @@ import ru.notes.model.Note
 interface NoteService {
 
     @Throws(NoteServiceException::class)
-    fun getAll(pageable: Pageable): Page<Note>
+    fun getAllNotes(): List<NoteDtoOut>?
 
     @Throws(NoteServiceException::class)
-    fun get(id: Long): Note
+    fun getNoteOutById(id: Long): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun add(noteDto: NoteDto): Note
+    fun addNote(noteDto: NoteDtoIn): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun update(id: Long, noteDto: NoteDto): Note
+    fun updateNote(id: Long, noteDto: NoteDtoIn): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun delete(id: Long)
+    fun deleteNote(id: Long)
+
+    @Throws(NoteServiceException::class)
+    fun findNotes(text: String): List<NoteDtoOut>?
 }
