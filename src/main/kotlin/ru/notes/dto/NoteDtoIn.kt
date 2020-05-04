@@ -8,13 +8,14 @@ import ru.notes.model.Note
  * Date: 2020-04-20
  */
 class NoteDtoIn
-constructor(val title: String,
-            val tag: String?,
-            val description: String?
+constructor(
+        val title: String?,
+        val tag: String?,
+        val description: String?
 ) {
     fun convertToNote(): Note =
-            Note(this.title,
-                    this.tag,
-                    this.description
+            Note(title,
+                    tag,
+                    description
             )
 }

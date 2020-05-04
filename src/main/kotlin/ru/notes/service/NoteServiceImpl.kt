@@ -30,23 +30,21 @@ class NoteServiceImpl
     override fun getAllNotes(): List<NoteDtoOut>? =
             noteRepository
                     .findAll()
-                    .map { it.convertToNoteDtoOut() }
+                    .map { NoteDtoOut(it) }
 
 
     @Transactional(readOnly = true)
-    override fun getNoteOutById(id: Long): NoteDtoOut =
-            getNoteById(id).convertToNoteDtoOut()
+    override fun getNote(id: Long): NoteDtoOut =
+            NoteDtoOut(getNoteById(id))
 
     @Transactional
     override fun addNote(noteDtoIn: NoteDtoIn): NoteDtoOut =
-            noteRepository.save(noteDtoIn.convertToNote())
-                    .convertToNoteDtoOut()
+            NoteDtoOut(noteRepository.save(noteDtoIn.convertToNote()))
+
 
     @Transactional
-    override fun updateNote(id: Long, noteDtoIn: NoteDtoIn): NoteDtoOut =
-            noteRepository.save(
-                    getNoteById(id).updateFromDto(noteDtoIn))
-                    .convertToNoteDtoOut()
+    override fun updateNote(id: Long, noteDtoOut: NoteDtoOut): NoteDtoOut =
+            NoteDtoOut(noteRepository.save(getNoteById(id).updateFromDto(noteDtoOut)))
 
     @Transactional
     override fun deleteNote(id: Long) =
@@ -55,7 +53,7 @@ class NoteServiceImpl
     override fun findNotes(text: String): List<NoteDtoOut>? =
             noteRepository
                     .findByName(text)
-                    ?.map { it.convertToNoteDtoOut() }
+                    ?.map { NoteDtoOut(it) }
 
     private fun getNoteById(id: Long): Note =
             noteRepository

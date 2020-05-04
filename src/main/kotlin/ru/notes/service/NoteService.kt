@@ -17,13 +17,13 @@ interface NoteService {
     fun getAllNotes(): List<NoteDtoOut>?
 
     @Throws(NoteServiceException::class)
-    fun getNoteOutById(id: Long): NoteDtoOut
+    fun getNote(id: Long): NoteDtoOut
 
     @Throws(NoteServiceException::class)
     fun addNote(noteDto: NoteDtoIn): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun updateNote(id: Long, noteDto: NoteDtoIn): NoteDtoOut
+    fun updateNote(id: Long, noteDtoOut: NoteDtoOut): NoteDtoOut
 
     @Throws(NoteServiceException::class)
     fun deleteNote(id: Long)

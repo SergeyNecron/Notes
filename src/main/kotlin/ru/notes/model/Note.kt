@@ -1,6 +1,5 @@
 package ru.notes.model
 
-import ru.notes.dto.NoteDtoIn
 import ru.notes.dto.NoteDtoOut
 import java.time.LocalDateTime
 import javax.persistence.Entity
@@ -21,20 +20,11 @@ data class Note(
         private val user: User? = null
 ) : AbstractEntity() {
 
-    fun updateFromDto(dto: NoteDtoIn): Note {
+    fun updateFromDto(dto: NoteDtoOut): Note {
         this.title = dto.title
         this.tag = dto.tag
         this.description = dto.description
         this.modifyDate = LocalDateTime.now()
         return this
     }
-
-    fun convertToNoteDtoOut(): NoteDtoOut =
-            NoteDtoOut(
-                    this.title,
-                    this.tag,
-                    this.description,
-                    this.createDate,
-                    this.modifyDate
-            )
 }
