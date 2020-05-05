@@ -21,8 +21,8 @@ public class NoteEditor extends VerticalLayout implements KeyNotifier {
 
     private Note note;
 
-    private TextField title = new TextField("", "titleNote");
-    private TextField tag = new TextField();
+    private TextField title = new TextField("", "title");
+    private TextField tag = new TextField("", "tag");
     private TextField description = new TextField("", "description");
 
 
@@ -54,7 +54,7 @@ public class NoteEditor extends VerticalLayout implements KeyNotifier {
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
         cancel.addClickListener(e -> setVisible(false));
-//        setVisible(false);
+        setVisible(false);
     }
 
     public void setChangeHandler(ChangeHandler changeHandler) {
