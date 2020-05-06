@@ -20,7 +20,6 @@ import ru.notes.repository.NoteRepository
 class NoteEditor
 @Autowired
 constructor(val noteRepository: NoteRepository) : VerticalLayout(), KeyNotifier {
-    private var note: Note = Note(null, null, null)
     private val title = TextField("", "title")
     private val tag = TextField("", "tag")
     private val description = TextField("", "description")
@@ -29,10 +28,28 @@ constructor(val noteRepository: NoteRepository) : VerticalLayout(), KeyNotifier 
     private val delete = Button("Delete")
     private val buttons = HorizontalLayout(save, cancel, delete)
     private val binder = Binder(Note::class.java)
+    private var note: Note = Note(null, null, null)
     private lateinit var changeHandler: ChangeHandler
 
-    fun setChangeHandler(changeHandler: ChangeHandler) {
-        this.changeHandler = changeHandler
+    init {
+        binder.bindInstanceFields(this) // bind using naming convention
+        configureAndStyleComponents()
+        wireActionButtonsToSaveDeleteAndReset()
+        isVisible = false
+        add(title, tag, description, buttons)
+    }
+
+    private fun configureAndStyleComponents() {
+        isSpacing = true
+        save.element.themeList.add("primary")
+        delete.element.themeList.add("error")
+        addKeyPressListener(Key.ENTER, ComponentEventListener { save() })
+    }
+
+    private fun wireActionButtonsToSaveDeleteAndReset() {
+        save.addClickListener { save() }
+        delete.addClickListener { delete() }
+        cancel.addClickListener { isVisible = false }
     }
 
     private fun save() {
@@ -56,23 +73,13 @@ constructor(val noteRepository: NoteRepository) : VerticalLayout(), KeyNotifier 
         title.focus()
     }
 
+    fun setChangeHandler(changeHandler: ChangeHandler) {
+        this.changeHandler = changeHandler
+    }
+
     interface ChangeHandler {
         fun onChange()
     }
 
-    init {
-        add(title, tag, description, buttons)
-        binder.bindInstanceFields(this)
-        // Configure and style components
-        isSpacing = true
-        save.element.themeList.add("primary")
-        delete.element.themeList.add("error")
-        addKeyPressListener(Key.ENTER, ComponentEventListener { save() })
 
-        // wire action buttons to save, delete and reset
-        save.addClickListener { save() }
-        delete.addClickListener { delete() }
-        cancel.addClickListener { isVisible = false }
-        isVisible = false
-    }
 }
