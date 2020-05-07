@@ -20,7 +20,7 @@ interface NoteService {
     fun getNote(id: Long): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun addNote(noteDto: NoteDtoIn): NoteDtoOut
+    fun addNote(noteDtoIn: NoteDtoIn): NoteDtoOut
 
     @Throws(NoteServiceException::class)
     fun updateNote(id: Long, noteDtoOut: NoteDtoOut): NoteDtoOut

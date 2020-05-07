@@ -11,4 +11,4 @@ pluginManagement {
         }
     }
 }
-rootProject.name = "notes"
+rootProject.name = "fine-note"
