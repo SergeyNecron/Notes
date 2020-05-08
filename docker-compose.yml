@@ -19,7 +19,7 @@ services:
   web:
     depends_on:
       - pg
-    container_name: note
+    container_name: fine-note
     build: .
     ports:
       - 8080:8080
