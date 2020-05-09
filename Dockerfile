@@ -21,8 +21,6 @@ RUN apk add npm
 RUN adduser -D --home ${GRADLE_HOME} --shell /bin/bash gradle
 RUN chown gradle:gradle -R ${PROJECT_DIR}
 USER gradle
-#RUN npm install
-#RUN gradle jar --no-daemon
 RUN chmod +x entrypoint.sh
-#CMD sh entrypoint.sh -port $PORT
-CMD top -b
+CMD sh entrypoint.sh -port $PORT
+#CMD top -b
