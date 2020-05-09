@@ -1,7 +1,7 @@
 FROM openjdk:8-jdk-alpine
 LABEL maintainer="Sergey Muratkin <sergeymuratkin@yandex.ru>"
 ENV PROJECT_DIR=/home/notes/
-RUN apk add git
+RUN apk update && apk add git
 RUN cd /home && git clone https://github.com/SergeyNecron/notes.git && cd notes/
 ENV GRADLE_VERSION=6.3
 ENV GRADLE_HOME=/opt/gradle
@@ -17,12 +17,12 @@ COPY settings.gradle.kts ${PROJECT_DIR}
 COPY gradlew ${PROJECT_DIR}
 
 WORKDIR ${PROJECT_DIR}
-RUN apk add npm && npm install
-
-#RUN chown gradle:gradle -R ${PROJECT_DIR}
-#USER gradle
-
-RUN gradle bootJar --no-daemon
+RUN apk add npm
+RUN adduser -D --home ${GRADLE_HOME} --shell /bin/bash gradle
+RUN chown gradle:gradle -R ${PROJECT_DIR}
+USER gradle
+#RUN npm install
+#RUN gradle jar --no-daemon
 RUN chmod +x entrypoint.sh
-CMD sh entrypoint.sh -port $PORT
+#CMD sh entrypoint.sh -port $PORT
 CMD top -b

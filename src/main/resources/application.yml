@@ -1,6 +1,9 @@
 server:
   port: ${PORT:8080}
 spring:
+  servlet:
+    multipart:
+      enabled: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://ec2-50-17-90-177.compute-1.amazonaws.com:5432/dsaqtg42g441a
@@ -22,3 +25,5 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: true
+vaadin:
+  async-supported: true
