@@ -1,9 +1,8 @@
 #!/bin/bash
-FILE=./build/libs/fine-note.jar
-if [ -f $FILE ];
+file=./build/libs/fine-note.jar
+if [ -e "$file" ]
 then
-  java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx256m -Xss512k -XX:MetaspaceSize=100m -jar $FILE
-  echo "File '$FILE' exist"
+        java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx256m -Xss512k -XX:MetaspaceSize=100m -jar $file
 else
-  echo "File '$FILE' not exist. File will build"
-  gradle bootRun
+        gradle bootRun
+fi

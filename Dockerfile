@@ -2,6 +2,7 @@ FROM openjdk:8-jdk-alpine
 LABEL maintainer="Sergey Muratkin <sergeymuratkin@yandex.ru>"
 ENV PROJECT_DIR=/home/notes/
 RUN apk update && apk add git
+#COPY ./ ${PROJECT_DIR}
 RUN cd /home && git clone https://github.com/SergeyNecron/notes.git && cd notes/
 ENV GRADLE_VERSION=6.3
 ENV GRADLE_HOME=/opt/gradle
