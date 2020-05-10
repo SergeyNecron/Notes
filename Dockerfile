@@ -23,5 +23,6 @@ RUN adduser -D --home ${GRADLE_HOME} --shell /bin/bash gradle
 RUN chown gradle:gradle -R ${PROJECT_DIR}
 USER gradle
 RUN chmod +x entrypoint.sh
+RUN gradle bootRun
 CMD sh entrypoint.sh -port $PORT
 #CMD top -b
