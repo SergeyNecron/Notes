@@ -11,12 +11,6 @@ ENV PATH=${PATH}:${GRADLE_HOME}/gradle-${GRADLE_VERSION}/bin
 RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -P /opt
 RUN mkdir ${GRADLE_HOME} && unzip -d ${GRADLE_HOME} ${GRADLE_HOME}-${GRADLE_VERSION}-bin.zip
 RUN rm /opt/*.zip
-
-# Prepare by downloading dependencies
-COPY build.gradle.kts ${PROJECT_DIR}
-COPY settings.gradle.kts ${PROJECT_DIR}
-COPY gradlew ${PROJECT_DIR}
-
 WORKDIR ${PROJECT_DIR}
 RUN apk add npm
 RUN adduser -D --home ${GRADLE_HOME} --shell /bin/bash gradle
@@ -24,5 +18,8 @@ RUN chown gradle:gradle -R ${PROJECT_DIR}
 USER gradle
 RUN chmod +x entrypoint.sh
 RUN gradle build
+ENV VAADIN_LIB=/node_modules/@vaadin/flow-frontend/
+RUN npm install
+RUN mkdir ${VAADIN_LIB} && mv ./frontend ${VAADIN_LIB}
 CMD sh entrypoint.sh -port $PORT
 #CMD top -b
