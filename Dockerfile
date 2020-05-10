@@ -20,6 +20,6 @@ RUN chmod +x entrypoint.sh
 RUN gradle build
 ENV VAADIN_LIB=/node_modules/@vaadin/flow-frontend/
 RUN npm install
-RUN mkdir ${VAADIN_LIB} && mv ./frontend ${VAADIN_LIB}
+RUN mkdir .${VAADIN_LIB} && mv ./frontend/* .${VAADIN_LIB}
 CMD sh entrypoint.sh -port $PORT
 #CMD top -b
