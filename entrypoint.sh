@@ -1,5 +1,5 @@
 #!/bin/bash
-file=./build/libs/fine-note.jar
+file=./node_modules/@vaadin/flow-frontend/gridConnector.js
 if [ -e "$file" ]
 then
         java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx256m -Xss512k -XX:MetaspaceSize=100m -jar $file
