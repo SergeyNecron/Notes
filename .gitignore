@@ -4,9 +4,6 @@
 /HELP.md
 /build/
 /node_modules/
-/target/frontend/generated-flow-imports.js
-/target/frontend/package.json
-/package.json
 /package-lock.json
 /webpack.config.js
 /webpack.generated.js
