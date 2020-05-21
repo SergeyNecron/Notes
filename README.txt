@@ -1,5 +1,5 @@
 Переменные среды:
-  local postgres
-      DATASOURCE_POSTGRES_URL: jdbc:postgresql://localhost:5432
-      DATASOURCE_POSTGRES_USERNAME: postgres
-      DATASOURCE_POSTGRES_PASSWORD: postgres
+  local mysql
+   #   DATASOURCE_MYSQL_URL: jdbc:mysql://localhost:3306
+   #   DATASOURCE_MYSQL_USERNAME: root
+   #   DATASOURCE_MYSQL_PASSWORD: password
