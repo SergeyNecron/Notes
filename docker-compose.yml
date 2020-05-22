@@ -15,7 +15,7 @@ services:
         limits:
           memory: 30M
     restart: always
-  notes:
+  web-mysql:
     depends_on:
       - ms
     container_name: fine-notes
