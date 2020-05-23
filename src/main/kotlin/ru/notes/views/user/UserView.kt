@@ -1,6 +1,5 @@
 package ru.notes.views.user
 
-import com.vaadin.flow.component.ClickEvent
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
@@ -44,8 +43,8 @@ class UserView : Div() {
 
         // Bind fields. This where you'd define e.g. validation rules
         binder.bindInstanceFields(this)
-        cancel.addClickListener { e: ClickEvent<Button?>? -> binder.readBean(null) }
-        save.addClickListener { e: ClickEvent<Button?>? -> Notification.show("Not implemented") }
+        cancel.addClickListener { binder.readBean(null) }
+        save.addClickListener { Notification.show("Not implemented") }
         add(wrapper)
     }
 

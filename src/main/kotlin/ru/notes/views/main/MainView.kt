@@ -15,7 +15,6 @@ import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
 import ru.notes.views.dashboard.DashboardView
 import ru.notes.views.note.NoteView
-import ru.notes.views.notes.MyNotesView
 import ru.notes.views.notes.NotesView
 import ru.notes.views.user.UserView
 import ru.notes.views.users.UsersView
@@ -54,14 +53,13 @@ class MainView : AppLayout() {
         }
 
         private val availableTabs: Array<Tab>
-            private get() {
+            get() {
                 val tabs: MutableList<Tab> = ArrayList()
                 tabs.add(createTab("Notes", NotesView::class.java))
                 tabs.add(createTab("Note", NoteView::class.java))
                 tabs.add(createTab("Users", UsersView::class.java))
                 tabs.add(createTab("User", UserView::class.java))
                 tabs.add(createTab("Dashboard", DashboardView::class.java))
-                tabs.add(createTab("MyNotes", MyNotesView::class.java))
                 return tabs.toTypedArray()
             }
 

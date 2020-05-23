@@ -1,132 +1,79 @@
 package ru.notes.views.notes
 
-import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent
-import com.vaadin.flow.component.ClickEvent
 import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
-import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.grid.GridVariant
 import com.vaadin.flow.component.html.Div
-import com.vaadin.flow.component.notification.Notification
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
-import com.vaadin.flow.component.splitlayout.SplitLayout
-import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.component.textfield.TextField
-import com.vaadin.flow.data.binder.Binder
+import com.vaadin.flow.data.value.ValueChangeMode
 import com.vaadin.flow.router.*
-import org.springframework.beans.factory.annotation.Autowired
-import ru.notes.backend.BackendService
-import ru.notes.backend.Employee
+import ru.notes.component.NoteEditor
+import ru.notes.model.Note
+import ru.notes.repository.NoteRepository
 import ru.notes.views.main.MainView
 
 @Route(value = "notes", layout = MainView::class)
 @RouteAlias(value = "", layout = MainView::class)
 @PageTitle("Notes")
 @CssImport("./styles/views/notes/notes-view.css")
-class NotesView : Div(), AfterNavigationObserver {
-    @Autowired
-    private val service: BackendService? = null
-    private val employees: Grid<Employee>
-    private val firstname = TextField()
-    private val lastname = TextField()
-    private val email = TextField()
-    private val password = PasswordField()
-    private val cancel = Button("Cancel")
-    private val save = Button("Save")
-    private val binder: Binder<Employee>
+class NotesView(private val noteRepository: NoteRepository,
+                private val noteEditor: NoteEditor
+) : Div(), AfterNavigationObserver {
+    private val filter = TextField()
+    private val addNewNoteButton = Button("New note", VaadinIcon.PLUS.create())
+    private val toolbar = HorizontalLayout(filter, addNewNoteButton)
+    private val note: Grid<Note> = Grid(Note::class.java)
 
     init {
-        setId("notes-ru.notes.view")
-        // Configure Grid
-        employees = Grid()
-        employees.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        employees.setHeightFull()
-        employees.addColumn { obj: Employee -> obj.firstname }.setHeader("First name")
-        employees.addColumn { obj: Employee -> obj.lastname }.setHeader("Last name")
-        employees.addColumn { obj: Employee -> obj.email }.setHeader("Email")
-
-        //when a row is selected or deselected, populate form
-        employees.asSingleSelect().addValueChangeListener { event: ComponentValueChangeEvent<Grid<Employee?>, Employee> -> populateForm(event.value) }
-
-        // Configure Form
-        binder = Binder(Employee::class.java)
-
-        // Bind fields. This where you'd define e.g. validation rules
-        binder.bindInstanceFields(this)
-        // note that password field isn't bound since that property doesn't exist in
-        // Employee
-
-        // the grid valueChangeEvent will clear the form too
-        cancel.addClickListener { e: ClickEvent<Button?>? -> employees.asSingleSelect().clear() }
-        save.addClickListener { e: ClickEvent<Button?>? -> Notification.show("Not implemented") }
-        val splitLayout = SplitLayout()
-        splitLayout.setSizeFull()
-        createGridLayout(splitLayout)
-        createEditorLayout(splitLayout)
-        add(splitLayout)
+        initFilter()
+        editNoteListener() //connect selected line to editor or hide if none is selected
+        addNoteListener()  //edit new Note the new button is clicked
+        refreshDataFromBackend()
+        listNotes("")
+        add(toolbar, note, noteEditor)
     }
 
-    private fun createEditorLayout(splitLayout: SplitLayout) {
-        val editorDiv = Div()
-        editorDiv.setId("editor-layout")
-        val formLayout = FormLayout()
-        addFormItem(editorDiv, formLayout, firstname, "First name")
-        addFormItem(editorDiv, formLayout, lastname, "Last name")
-        addFormItem(editorDiv, formLayout, email, "Email")
-        addFormItem(editorDiv, formLayout, password, "Password")
-        createButtonLayout(editorDiv)
-        splitLayout.addToSecondary(editorDiv)
+    private fun refreshDataFromBackend() {
+        noteEditor.setChangeHandler(object : NoteEditor.ChangeHandler {
+            override fun onChange() {
+                noteEditor.isVisible = false
+                listNotes(filter.value)
+            }
+        })
     }
 
-    private fun createButtonLayout(editorDiv: Div) {
-        val buttonLayout = HorizontalLayout()
-        buttonLayout.setId("button-layout")
-        buttonLayout.setWidthFull()
-        buttonLayout.isSpacing = true
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
-        buttonLayout.add(cancel, save)
-        editorDiv.add(buttonLayout)
+    private fun addNoteListener() {
+        addNewNoteButton.addClickListener {
+            noteEditor.editNote(Note(null, null, null))
+        }
     }
 
-    private fun createGridLayout(splitLayout: SplitLayout) {
-        val wrapper = Div()
-        wrapper.setId("wrapper")
-        wrapper.setWidthFull()
-        splitLayout.addToPrimary(wrapper)
-        wrapper.add(employees)
+    private fun editNoteListener() {
+        note.asSingleSelect()
+                .addValueChangeListener {
+                    noteEditor.editNote(it.value)
+                }
     }
 
-    private fun addFormItem(wrapper: Div, formLayout: FormLayout,
-                            field: TextField, fieldName: String) {
-        formLayout.addFormItem(field, fieldName)
-        wrapper.add(formLayout)
-        field.element.classList.add("full-width")
+    private fun initFilter() {
+        filter.placeholder = "filter"
+        filter.valueChangeMode = ValueChangeMode.EAGER
+        filter.addValueChangeListener {
+            listNotes(it.value)
+        }
     }
 
-    private fun addFormItem(wrapper: Div, formLayout: FormLayout,
-                            field: PasswordField, fieldName: String) {
-        formLayout.addFormItem(field, fieldName)
-        wrapper.add(formLayout)
-        field.element.classList.add("full-width")
+    private fun listNotes(name: String) {
+        note.setItems(
+                if (name.isEmpty())
+                    noteRepository.findAll() else
+                    noteRepository.findByName(name)
+        )
     }
 
-    override fun afterNavigation(event: AfterNavigationEvent) {
-
-        // Lazy init of the grid items, happens only when we are sure the ru.notes.view will be
-        // shown to the user
-        employees.setItems(service!!.employees)
+    override fun afterNavigation(event: AfterNavigationEvent?) {
+        TODO("Not yet implemented")
     }
-
-    private fun populateForm(value: Employee) {
-        // Value can be null as well, that clears the form
-        binder.readBean(value)
-
-        // The password field isn't bound through the binder, so handle that
-        password.value = ""
-    }
-
-
 }

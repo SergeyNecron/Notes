@@ -1,7 +1,5 @@
 package ru.notes.views.users
 
-import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent
-import com.vaadin.flow.component.ClickEvent
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
@@ -29,7 +27,7 @@ import ru.notes.views.main.MainView
 @CssImport("./styles/views/users/users-view.css")
 class UsersView : Div(), AfterNavigationObserver {
     @Autowired
-    private val service: BackendService? = null
+    private lateinit var service: BackendService
     private val employees: Grid<Employee>
     private val firstname = TextField()
     private val lastname = TextField()
@@ -87,7 +85,7 @@ class UsersView : Div(), AfterNavigationObserver {
 
         // Lazy init of the grid items, happens only when we are sure the ru.notes.view will be
         // shown to the user
-        employees.setItems(service!!.employees)
+        employees.setItems(service.employees)
     }
 
     private fun populateForm(value: Employee) {
@@ -104,12 +102,12 @@ class UsersView : Div(), AfterNavigationObserver {
         employees = Grid()
         employees.addThemeVariants(GridVariant.LUMO_NO_BORDER)
         employees.setHeightFull()
-        employees.addColumn { obj: Employee -> obj.firstname }.setHeader("First name")
-        employees.addColumn { obj: Employee -> obj.lastname }.setHeader("Last name")
-        employees.addColumn { obj: Employee -> obj.email }.setHeader("Email")
+        employees.addColumn { it.firstname }.setHeader("First name")
+        employees.addColumn { it.lastname }.setHeader("Last name")
+        employees.addColumn { it.email }.setHeader("Email")
 
         //when a row is selected or deselected, populate form
-        employees.asSingleSelect().addValueChangeListener { event: ComponentValueChangeEvent<Grid<Employee?>, Employee> -> populateForm(event.value) }
+        employees.asSingleSelect().addValueChangeListener { populateForm(it.value) }
 
         // Configure Form
         binder = Binder(Employee::class.java)
@@ -120,8 +118,8 @@ class UsersView : Div(), AfterNavigationObserver {
         // Employee
 
         // the grid valueChangeEvent will clear the form too
-        cancel.addClickListener { e: ClickEvent<Button?>? -> employees.asSingleSelect().clear() }
-        save.addClickListener { e: ClickEvent<Button?>? -> Notification.show("Not implemented") }
+        cancel.addClickListener { employees.asSingleSelect().clear() }
+        save.addClickListener { Notification.show("Not implemented") }
         val splitLayout = SplitLayout()
         splitLayout.setSizeFull()
         createGridLayout(splitLayout)
