@@ -99,7 +99,7 @@ class DashboardView : Div(), AfterNavigationObserver {
     }
 
     init {
-        setId("dashboard-ru.notes.view")
+        setId("dashboard-view")
         val board = Board()
         board.addRow(
                 createBadge("Users", usersH2, "primary-text", "Current users in the app", "badge"),

@@ -1,4 +1,4 @@
-package ru.notes.views
+package ru.notes.views.notes
 
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
@@ -7,14 +7,16 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
+import com.vaadin.flow.router.Route
 import ru.notes.component.NoteEditor
 import ru.notes.model.Note
 import ru.notes.repository.NoteRepository
+import ru.notes.views.main.MainView
 
 
-//@Route("")
-class MainView(private val noteRepository: NoteRepository,
-               private val noteEditor: NoteEditor
+@Route(value = "mynotes", layout = MainView::class)
+class MyNotesView(private val noteRepository: NoteRepository,
+                  private val noteEditor: NoteEditor
 ) : VerticalLayout() {
     private val filter = TextField()
     private val addNewNoteButton = Button("New note", VaadinIcon.PLUS.create())

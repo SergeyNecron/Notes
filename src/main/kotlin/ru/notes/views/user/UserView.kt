@@ -31,6 +31,24 @@ class UserView : Div() {
     private val notes = TextArea()
     private val cancel = Button("Cancel")
     private val save = Button("Save")
+
+    init {
+        setId("user-ru.notes.view")
+        val wrapper = createWrapper()
+        createTitle(wrapper)
+        createFormLayout(wrapper)
+        createButtonLayout(wrapper)
+
+        // Configure Form
+        val binder = Binder(Employee::class.java)
+
+        // Bind fields. This where you'd define e.g. validation rules
+        binder.bindInstanceFields(this)
+        cancel.addClickListener { e: ClickEvent<Button?>? -> binder.readBean(null) }
+        save.addClickListener { e: ClickEvent<Button?>? -> Notification.show("Not implemented") }
+        add(wrapper)
+    }
+
     private fun createTitle(wrapper: VerticalLayout) {
         val h1 = H1("Form")
         wrapper.add(h1)
@@ -75,20 +93,5 @@ class UserView : Div() {
         return formItem
     }
 
-    init {
-        setId("user-ru.notes.view")
-        val wrapper = createWrapper()
-        createTitle(wrapper)
-        createFormLayout(wrapper)
-        createButtonLayout(wrapper)
 
-        // Configure Form
-        val binder = Binder(Employee::class.java)
-
-        // Bind fields. This where you'd define e.g. validation rules
-        binder.bindInstanceFields(this)
-        cancel.addClickListener { e: ClickEvent<Button?>? -> binder.readBean(null) }
-        save.addClickListener { e: ClickEvent<Button?>? -> Notification.show("Not implemented") }
-        add(wrapper)
-    }
 }

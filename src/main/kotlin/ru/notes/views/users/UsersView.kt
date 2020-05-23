@@ -1,6 +1,5 @@
 package ru.notes.views.users
 
-import com.vaadin.flow.component.AbstractField
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent
 import com.vaadin.flow.component.ClickEvent
 import com.vaadin.flow.component.button.Button
@@ -71,10 +70,17 @@ class UsersView : Div(), AfterNavigationObserver {
     }
 
     private fun addFormItem(wrapper: Div, formLayout: FormLayout,
-                            field: AbstractField<*, *>, fieldName: String) {
+                            field: TextField, fieldName: String) {
         formLayout.addFormItem(field, fieldName)
         wrapper.add(formLayout)
-//        field.element.classList.add("full-width")
+        field.element.classList.add("full-width")
+    }
+
+    private fun addFormItem(wrapper: Div, formLayout: FormLayout,
+                            field: PasswordField, fieldName: String) {
+        formLayout.addFormItem(field, fieldName)
+        wrapper.add(formLayout)
+        field.element.classList.add("full-width")
     }
 
     override fun afterNavigation(event: AfterNavigationEvent) {

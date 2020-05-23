@@ -1,6 +1,5 @@
 package ru.notes.views.notes
 
-import com.vaadin.flow.component.AbstractField
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent
 import com.vaadin.flow.component.ClickEvent
 import com.vaadin.flow.component.button.Button
@@ -37,6 +36,38 @@ class NotesView : Div(), AfterNavigationObserver {
     private val cancel = Button("Cancel")
     private val save = Button("Save")
     private val binder: Binder<Employee>
+
+    init {
+        setId("notes-ru.notes.view")
+        // Configure Grid
+        employees = Grid()
+        employees.addThemeVariants(GridVariant.LUMO_NO_BORDER)
+        employees.setHeightFull()
+        employees.addColumn { obj: Employee -> obj.firstname }.setHeader("First name")
+        employees.addColumn { obj: Employee -> obj.lastname }.setHeader("Last name")
+        employees.addColumn { obj: Employee -> obj.email }.setHeader("Email")
+
+        //when a row is selected or deselected, populate form
+        employees.asSingleSelect().addValueChangeListener { event: ComponentValueChangeEvent<Grid<Employee?>, Employee> -> populateForm(event.value) }
+
+        // Configure Form
+        binder = Binder(Employee::class.java)
+
+        // Bind fields. This where you'd define e.g. validation rules
+        binder.bindInstanceFields(this)
+        // note that password field isn't bound since that property doesn't exist in
+        // Employee
+
+        // the grid valueChangeEvent will clear the form too
+        cancel.addClickListener { e: ClickEvent<Button?>? -> employees.asSingleSelect().clear() }
+        save.addClickListener { e: ClickEvent<Button?>? -> Notification.show("Not implemented") }
+        val splitLayout = SplitLayout()
+        splitLayout.setSizeFull()
+        createGridLayout(splitLayout)
+        createEditorLayout(splitLayout)
+        add(splitLayout)
+    }
+
     private fun createEditorLayout(splitLayout: SplitLayout) {
         val editorDiv = Div()
         editorDiv.setId("editor-layout")
@@ -69,10 +100,17 @@ class NotesView : Div(), AfterNavigationObserver {
     }
 
     private fun addFormItem(wrapper: Div, formLayout: FormLayout,
-                            field: AbstractField<*, *>, fieldName: String) {
+                            field: TextField, fieldName: String) {
         formLayout.addFormItem(field, fieldName)
         wrapper.add(formLayout)
-//        field.element.classList.add("full-width")
+        field.element.classList.add("full-width")
+    }
+
+    private fun addFormItem(wrapper: Div, formLayout: FormLayout,
+                            field: PasswordField, fieldName: String) {
+        formLayout.addFormItem(field, fieldName)
+        wrapper.add(formLayout)
+        field.element.classList.add("full-width")
     }
 
     override fun afterNavigation(event: AfterNavigationEvent) {
@@ -90,34 +128,5 @@ class NotesView : Div(), AfterNavigationObserver {
         password.value = ""
     }
 
-    init {
-        setId("notes-ru.notes.view")
-        // Configure Grid
-        employees = Grid()
-        employees.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        employees.setHeightFull()
-        employees.addColumn { obj: Employee -> obj.firstname }.setHeader("First name")
-        employees.addColumn { obj: Employee -> obj.lastname }.setHeader("Last name")
-        employees.addColumn { obj: Employee -> obj.email }.setHeader("Email")
 
-        //when a row is selected or deselected, populate form
-        employees.asSingleSelect().addValueChangeListener { event: ComponentValueChangeEvent<Grid<Employee?>, Employee> -> populateForm(event.value) }
-
-        // Configure Form
-        binder = Binder(Employee::class.java)
-
-        // Bind fields. This where you'd define e.g. validation rules
-        binder.bindInstanceFields(this)
-        // note that password field isn't bound since that property doesn't exist in
-        // Employee
-
-        // the grid valueChangeEvent will clear the form too
-        cancel.addClickListener { e: ClickEvent<Button?>? -> employees.asSingleSelect().clear() }
-        save.addClickListener { e: ClickEvent<Button?>? -> Notification.show("Not implemented") }
-        val splitLayout = SplitLayout()
-        splitLayout.setSizeFull()
-        createGridLayout(splitLayout)
-        createEditorLayout(splitLayout)
-        add(splitLayout)
-    }
 }
