@@ -16,8 +16,8 @@ import ru.notes.service.UserService
  * @author Sergey Muratkin
  * Date: 2020-04-28
  */
-@RestController
-@RequestMapping("/user")
+//@RestController
+//@RequestMapping("/user")
 class UserController @Autowired constructor(
         private val userService: UserService
 ) {

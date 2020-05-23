@@ -29,7 +29,7 @@ RUN gradle build && \
 npm install && \
 # fix error frontend
 mkdir .${VAADIN_LIB}  && \
-mv ./frontend/* .${VAADIN_LIB}
+mv ./frontend/lib* .${VAADIN_LIB}
 # run
 RUN chmod +x entrypoint.sh
 CMD sh entrypoint.sh -port $PORT

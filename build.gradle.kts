@@ -32,6 +32,8 @@ dependencies {
     implementation("com.vaadin:vaadin-spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.vaadin:vaadin-charts-flow")
+    implementation("com.vaadin:vaadin-board-flow")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
