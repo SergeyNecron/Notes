@@ -32,7 +32,7 @@ class UserView : Div() {
     private val save = Button("Save")
 
     init {
-        setId("user-ru.notes.view")
+        setId("user-view")
         val wrapper = createWrapper()
         createTitle(wrapper)
         createFormLayout(wrapper)

@@ -12,7 +12,7 @@ import ru.notes.views.main.MainView
 @CssImport("./styles/views/note/note-view.css")
 class NoteView : Div() {
     fun NoteView() {
-        setId("note-ru.notes.view")
+        setId("note-view")
         add(Label("Content placeholder"))
     }
 }

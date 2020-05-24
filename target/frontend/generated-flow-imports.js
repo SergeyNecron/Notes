@@ -10,10 +10,10 @@ function addCssBlock(block) {
 }
 
 import $css_0 from 'Frontend/styles/views/note/note-view.css';
-import $css_1 from 'Frontend/styles/views/dashboard/dashboard-view.css';
-import $css_2 from 'Frontend/styles/views/notes/notes-view.css';
-import $css_3 from 'Frontend/styles/views/user/user-view.css';
-import $css_4 from 'Frontend/styles/views/users/users-view.css';
+import $css_1 from 'Frontend/styles/views/user/user-view.css';
+import $css_2 from 'Frontend/styles/views/dashboard/dashboard-view.css';
+import $css_3 from 'Frontend/styles/views/users/users-view.css';
+import $css_4 from 'Frontend/styles/views/notes/notes-view.css';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-list/iron-list.js';
 import '@vaadin/flow-frontend/comboBoxConnector-es6.js';
@@ -91,8 +91,8 @@ import '@vaadin/flow-frontend/selectConnector.js';
 import 'Frontend/styles/shared-styles.js';
 
 addCssBlock(`<custom-style><style>${$css_0}</style></custom-style>`);
-addCssBlock(`<custom-style><style include="lumo-badge">${$css_1}</style></custom-style>`);
-addCssBlock(`<custom-style><style>${$css_2}</style></custom-style>`);
+addCssBlock(`<custom-style><style>${$css_1}</style></custom-style>`);
+addCssBlock(`<custom-style><style include="lumo-badge">${$css_2}</style></custom-style>`);
 addCssBlock(`<custom-style><style>${$css_3}</style></custom-style>`);
 addCssBlock(`<custom-style><style>${$css_4}</style></custom-style>`);
 

@@ -36,6 +36,38 @@ class UsersView : Div(), AfterNavigationObserver {
     private val cancel = Button("Cancel")
     private val save = Button("Save")
     private val binder: Binder<Employee>
+
+    init {
+        setId("users-view")
+        // Configure Grid
+        employees = Grid()
+        employees.addThemeVariants(GridVariant.LUMO_NO_BORDER)
+        employees.setHeightFull()
+        employees.addColumn { it.firstname }.setHeader("First name")
+        employees.addColumn { it.lastname }.setHeader("Last name")
+        employees.addColumn { it.email }.setHeader("Email")
+
+        //when a row is selected or deselected, populate form
+        employees.asSingleSelect().addValueChangeListener { populateForm(it.value) }
+
+        // Configure Form
+        binder = Binder(Employee::class.java)
+
+        // Bind fields. This where you'd define e.g. validation rules
+        binder.bindInstanceFields(this)
+        // note that password field isn't bound since that property doesn't exist in
+        // Employee
+
+        // the grid valueChangeEvent will clear the form too
+        cancel.addClickListener { employees.asSingleSelect().clear() }
+        save.addClickListener { Notification.show("Not implemented") }
+        val splitLayout = SplitLayout()
+        splitLayout.setSizeFull()
+        createGridLayout(splitLayout)
+        createEditorLayout(splitLayout)
+        add(splitLayout)
+    }
+
     private fun createEditorLayout(splitLayout: SplitLayout) {
         val editorDiv = Div()
         editorDiv.setId("editor-layout")
@@ -96,34 +128,5 @@ class UsersView : Div(), AfterNavigationObserver {
         password.value = ""
     }
 
-    init {
-        setId("users-ru.notes.view")
-        // Configure Grid
-        employees = Grid()
-        employees.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        employees.setHeightFull()
-        employees.addColumn { it.firstname }.setHeader("First name")
-        employees.addColumn { it.lastname }.setHeader("Last name")
-        employees.addColumn { it.email }.setHeader("Email")
 
-        //when a row is selected or deselected, populate form
-        employees.asSingleSelect().addValueChangeListener { populateForm(it.value) }
-
-        // Configure Form
-        binder = Binder(Employee::class.java)
-
-        // Bind fields. This where you'd define e.g. validation rules
-        binder.bindInstanceFields(this)
-        // note that password field isn't bound since that property doesn't exist in
-        // Employee
-
-        // the grid valueChangeEvent will clear the form too
-        cancel.addClickListener { employees.asSingleSelect().clear() }
-        save.addClickListener { Notification.show("Not implemented") }
-        val splitLayout = SplitLayout()
-        splitLayout.setSizeFull()
-        createGridLayout(splitLayout)
-        createEditorLayout(splitLayout)
-        add(splitLayout)
-    }
 }
