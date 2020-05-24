@@ -1,4 +1,4 @@
-package ru.notes.component
+package ru.notes.views.component
 
 import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.Key
@@ -10,7 +10,6 @@ import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.splitlayout.SplitLayout
-import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.spring.annotation.SpringComponent
@@ -31,17 +30,15 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
     private val save = Button("Save")
     private val cancel = Button("Cancel")
     private val delete = Button("Delete")
-    private val buttons = HorizontalLayout(save, cancel, delete)
     private val binder = Binder(Note::class.java)
     private var note: Note = Note(null, null, null)
     private lateinit var changeHandler: ChangeHandler
-
+    val editorDiv = Div()
     init {
         binder.bindInstanceFields(this) // bind using naming convention
         configureAndStyleComponents()
         wireActionButtonsToSaveDeleteAndReset()
-        isVisible = false
-        add(title, tag, description, buttons)
+        add(title, tag, description)
     }
 
     private fun configureAndStyleComponents() {
@@ -54,29 +51,30 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
     private fun wireActionButtonsToSaveDeleteAndReset() {
         save.addClickListener { save() }
         delete.addClickListener { delete() }
-        cancel.addClickListener { isVisible = false }
+        cancel.addClickListener { editorDiv.isVisible = false }
     }
 
     private fun save() {
         noteRepository.save(note)
         changeHandler.onChange()
+        editorDiv.isVisible = false
     }
 
     private fun delete() {
         noteRepository.delete(note)
         changeHandler.onChange()
+        editorDiv.isVisible = false
     }
 
     fun editNote(note: Note?) {
         if (note == null) {
-            isVisible = false
+            editorDiv.isVisible = true
             return
         }
         this.note = noteRepository.findById(note.id).orElse(note)
         binder.bean = this.note
 //        binder.readBean(note)
-//        note.id = null
-        isVisible = true
+        editorDiv.isVisible = true
         title.focus()
     }
 
@@ -89,13 +87,11 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
     }
 
     fun createEditorLayout(splitLayout: SplitLayout) {
-        val editorDiv = Div()
         editorDiv.setId("editor-layout")
         val formLayout = FormLayout()
         addFormItem(editorDiv, formLayout, title, "title")
         addFormItem(editorDiv, formLayout, tag, "tag")
         addFormItem(editorDiv, formLayout, description, "description")
-
         createButtonLayout(editorDiv)
         splitLayout.addToSecondary(editorDiv)
     }
@@ -118,10 +114,4 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
         field.element.classList.add("full-width")
     }
 
-    private fun addFormItem(wrapper: Div, formLayout: FormLayout,
-                            field: PasswordField, fieldName: String) {
-        formLayout.addFormItem(field, fieldName)
-        wrapper.add(formLayout)
-        field.element.classList.add("full-width")
-    }
 }

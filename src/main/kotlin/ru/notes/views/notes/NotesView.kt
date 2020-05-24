@@ -13,9 +13,9 @@ import com.vaadin.flow.data.value.ValueChangeMode
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
-import ru.notes.component.NoteEditor
 import ru.notes.model.Note
 import ru.notes.repository.NoteRepository
+import ru.notes.views.component.NoteEditor
 import ru.notes.views.main.MainView
 
 @Route(value = "notes", layout = MainView::class)
@@ -32,21 +32,20 @@ class NotesView(private val noteRepository: NoteRepository,
     private val filter = TextField()
     private val addNewNoteButton = Button("New note", VaadinIcon.PLUS.create())
     private val toolbar = HorizontalLayout(filter, addNewNoteButton)
-    private val note: Grid<Note> = Grid(Note::class.java)
+    private val grid: Grid<Note> = Grid()
 
     init {
         setId("notes-view")
-        note.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-
-        note.addColumn { it.description }.setHeader("description")
-        note.addColumn { it.tag }.setHeader("tag")
-        note.addColumn { it.title }.setHeader("title")
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
+        grid.addColumn { it.description }.setHeader("description")
+        grid.addColumn { it.tag }.setHeader("tag")
+        grid.addColumn { it.title }.setHeader("title")
         initFilter()
         editNoteListener() //connect selected line to editor or hide if none is selected
         addNoteListener()  //edit new Note the new button is clicked
         refreshDataFromBackend()
         listNotes("")
-        add(toolbar, note, noteEditor)
+        add(toolbar, grid, noteEditor)
         val splitLayout = SplitLayout()
         splitLayout.setSizeFull()
         createGridLayout(splitLayout)
@@ -59,7 +58,7 @@ class NotesView(private val noteRepository: NoteRepository,
         wrapper.setId("wrapper")
         wrapper.setWidthFull()
         splitLayout.addToPrimary(wrapper)
-        wrapper.add(note)
+        wrapper.add(grid)
     }
 
     private fun initFilter() {
@@ -71,7 +70,7 @@ class NotesView(private val noteRepository: NoteRepository,
     }
 
     private fun editNoteListener() {
-        note.asSingleSelect()
+        grid.asSingleSelect()
                 .addValueChangeListener {
                     noteEditor.editNote(it.value)
                 }
@@ -93,7 +92,7 @@ class NotesView(private val noteRepository: NoteRepository,
     }
 
     private fun listNotes(name: String) {
-        note.setItems(
+        grid.setItems(
                 if (name.isEmpty())
                     noteRepository.findAll() else
                     noteRepository.findByName(name)
