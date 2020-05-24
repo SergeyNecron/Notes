@@ -7,6 +7,7 @@ import com.vaadin.flow.component.grid.GridVariant
 import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.splitlayout.SplitLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
 import com.vaadin.flow.router.PageTitle
@@ -46,6 +47,19 @@ class NotesView(private val noteRepository: NoteRepository,
         refreshDataFromBackend()
         listNotes("")
         add(toolbar, note, noteEditor)
+        val splitLayout = SplitLayout()
+        splitLayout.setSizeFull()
+        createGridLayout(splitLayout)
+        noteEditor.createEditorLayout(splitLayout)
+        add(splitLayout)
+    }
+
+    private fun createGridLayout(splitLayout: SplitLayout) {
+        val wrapper = Div()
+        wrapper.setId("wrapper")
+        wrapper.setWidthFull()
+        splitLayout.addToPrimary(wrapper)
+        wrapper.add(note)
     }
 
     private fun initFilter() {

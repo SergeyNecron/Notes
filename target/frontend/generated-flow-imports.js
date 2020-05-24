@@ -9,11 +9,11 @@ function addCssBlock(block) {
  document.head.appendChild(tpl.content);
 }
 
-import $css_0 from 'Frontend/styles/views/note/note-view.css';
-import $css_1 from 'Frontend/styles/views/users/users-view.css';
+import $css_0 from 'Frontend/styles/views/dashboard/dashboard-view.css';
+import $css_1 from 'Frontend/styles/views/note/note-view.css';
 import $css_2 from 'Frontend/styles/views/notes/notes-view.css';
-import $css_3 from 'Frontend/styles/views/dashboard/dashboard-view.css';
-import $css_4 from 'Frontend/styles/views/user/user-view.css';
+import $css_3 from 'Frontend/styles/views/user/user-view.css';
+import $css_4 from 'Frontend/styles/views/users/users-view.css';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-list/iron-list.js';
 import '@vaadin/flow-frontend/comboBoxConnector-es6.js';

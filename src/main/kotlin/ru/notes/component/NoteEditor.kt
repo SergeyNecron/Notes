@@ -4,8 +4,13 @@ import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.KeyNotifier
 import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.button.ButtonVariant
+import com.vaadin.flow.component.formlayout.FormLayout
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.splitlayout.SplitLayout
+import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.spring.annotation.SpringComponent
@@ -83,5 +88,40 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
         fun onChange()
     }
 
+    fun createEditorLayout(splitLayout: SplitLayout) {
+        val editorDiv = Div()
+        editorDiv.setId("editor-layout")
+        val formLayout = FormLayout()
+        addFormItem(editorDiv, formLayout, title, "title")
+        addFormItem(editorDiv, formLayout, tag, "tag")
+        addFormItem(editorDiv, formLayout, description, "description")
 
+        createButtonLayout(editorDiv)
+        splitLayout.addToSecondary(editorDiv)
+    }
+
+    private fun createButtonLayout(editorDiv: Div) {
+        val buttonLayout = HorizontalLayout()
+        buttonLayout.setId("button-layout")
+        buttonLayout.setWidthFull()
+        buttonLayout.isSpacing = true
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+        buttonLayout.add(cancel, save, delete)
+        editorDiv.add(buttonLayout)
+    }
+
+    private fun addFormItem(wrapper: Div, formLayout: FormLayout,
+                            field: TextField, fieldName: String) {
+        formLayout.addFormItem(field, fieldName)
+        wrapper.add(formLayout)
+        field.element.classList.add("full-width")
+    }
+
+    private fun addFormItem(wrapper: Div, formLayout: FormLayout,
+                            field: PasswordField, fieldName: String) {
+        formLayout.addFormItem(field, fieldName)
+        wrapper.add(formLayout)
+        field.element.classList.add("full-width")
+    }
 }
