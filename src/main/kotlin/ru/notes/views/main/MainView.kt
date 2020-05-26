@@ -13,7 +13,6 @@ import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.server.PWA
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
-import ru.notes.views.dashboard.DashboardView
 import ru.notes.views.note.NoteView
 import ru.notes.views.notes.NotesView
 import ru.notes.views.user.UserView
@@ -59,7 +58,6 @@ class MainView : AppLayout() {
                 tabs.add(createTab("Note", NoteView::class.java))
                 tabs.add(createTab("Users", UsersView::class.java))
                 tabs.add(createTab("User", UserView::class.java))
-                tabs.add(createTab("Dashboard", DashboardView::class.java))
                 return tabs.toTypedArray()
             }
 

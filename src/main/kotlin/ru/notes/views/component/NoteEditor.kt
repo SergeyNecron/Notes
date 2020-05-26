@@ -38,7 +38,6 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
         binder.bindInstanceFields(this) // bind using naming convention
         configureAndStyleComponents()
         wireActionButtonsToSaveDeleteAndReset()
-        add(title, tag, description)
     }
 
     private fun configureAndStyleComponents() {
@@ -88,6 +87,7 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
 
     fun createEditorLayout(splitLayout: SplitLayout) {
         editorDiv.setId("editor-layout")
+        editorDiv.isVisible = false
         val formLayout = FormLayout()
         addFormItem(editorDiv, formLayout, title, "title")
         addFormItem(editorDiv, formLayout, tag, "tag")
@@ -114,4 +114,8 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
         field.element.classList.add("full-width")
     }
 
+    fun getAll(name: String): List<Note>? =
+            if (name.isEmpty())
+                noteRepository.findAll() else
+                noteRepository.findByName(name)
 }

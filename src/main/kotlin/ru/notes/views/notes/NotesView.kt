@@ -14,7 +14,6 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
 import ru.notes.model.Note
-import ru.notes.repository.NoteRepository
 import ru.notes.views.component.NoteEditor
 import ru.notes.views.main.MainView
 
@@ -22,13 +21,8 @@ import ru.notes.views.main.MainView
 @RouteAlias(value = "", layout = MainView::class)
 @PageTitle("Notes")
 @CssImport("./styles/views/notes/notes-view.css")
-//class NotesView: Div(), AfterNavigationObserver {
-//    @Autowired
-//    private lateinit var noteRepository: NoteRepository
-//    private lateinit var noteEditor: NoteEditor
-class NotesView(private val noteRepository: NoteRepository,
-                private val noteEditor: NoteEditor
-) : Div() {
+
+class NotesView(private val noteEditor: NoteEditor) : Div() {
     private val filter = TextField()
     private val addNewNoteButton = Button("New note", VaadinIcon.PLUS.create())
     private val toolbar = HorizontalLayout(filter, addNewNoteButton)
@@ -36,15 +30,11 @@ class NotesView(private val noteRepository: NoteRepository,
 
     init {
         setId("notes-view")
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        grid.addColumn { it.description }.setHeader("description")
-        grid.addColumn { it.tag }.setHeader("tag")
-        grid.addColumn { it.title }.setHeader("title")
+        initGrid()
         initFilter()
         editNoteListener() //connect selected line to editor or hide if none is selected
         addNoteListener()  //edit new Note the new button is clicked
         refreshDataFromBackend()
-        listNotes("")
         add(toolbar, grid, noteEditor)
         val splitLayout = SplitLayout()
         splitLayout.setSizeFull()
@@ -53,19 +43,19 @@ class NotesView(private val noteRepository: NoteRepository,
         add(splitLayout)
     }
 
-    private fun createGridLayout(splitLayout: SplitLayout) {
-        val wrapper = Div()
-        wrapper.setId("wrapper")
-        wrapper.setWidthFull()
-        splitLayout.addToPrimary(wrapper)
-        wrapper.add(grid)
+    private fun initGrid() {
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
+        grid.addColumn { it.description }.setHeader("description")
+        grid.addColumn { it.tag }.setHeader("tag")
+        grid.addColumn { it.title }.setHeader("title")
+        grid.setItems(noteEditor.getAll(""))
     }
 
     private fun initFilter() {
         filter.placeholder = "filter"
         filter.valueChangeMode = ValueChangeMode.EAGER
         filter.addValueChangeListener {
-            listNotes(it.value)
+            grid.setItems(noteEditor.getAll(filter.value))
         }
     }
 
@@ -82,21 +72,20 @@ class NotesView(private val noteRepository: NoteRepository,
         }
     }
 
+    private fun createGridLayout(splitLayout: SplitLayout) {
+        val wrapper = Div()
+        wrapper.setId("wrapper")
+        wrapper.setWidthFull()
+        splitLayout.addToPrimary(wrapper)
+        wrapper.add(grid)
+    }
+
     private fun refreshDataFromBackend() {
         noteEditor.setChangeHandler(object : NoteEditor.ChangeHandler {
             override fun onChange() {
                 noteEditor.isVisible = false
-                listNotes(filter.value)
+                grid.setItems(noteEditor.getAll(filter.value))
             }
         })
     }
-
-    private fun listNotes(name: String) {
-        grid.setItems(
-                if (name.isEmpty())
-                    noteRepository.findAll() else
-                    noteRepository.findByName(name)
-        )
-    }
-
 }
