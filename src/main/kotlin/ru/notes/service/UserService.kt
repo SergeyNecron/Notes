@@ -1,9 +1,8 @@
 package ru.notes.service
 
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import ru.notes.dto.UserDto
+import ru.notes.exception.NoteServiceException
 import ru.notes.exception.UserServiceException
 import ru.notes.model.User
 
@@ -16,7 +15,7 @@ import ru.notes.model.User
 interface UserService {
 
     @Throws(UserServiceException::class)
-    fun getAll(pageable: Pageable): Page<User>
+    fun getAll(): List<User>
 
     @Throws(UserServiceException::class)
     fun get(id: Long): User
@@ -29,4 +28,7 @@ interface UserService {
 
     @Throws(UserServiceException::class)
     fun delete(id: Long)
+
+    @Throws(NoteServiceException::class)
+    fun findUsers(text: String): List<User>?
 }

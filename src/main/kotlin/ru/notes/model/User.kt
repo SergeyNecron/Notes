@@ -8,7 +8,9 @@ import javax.persistence.*
 //syntax error at or near "user"
 @Table(name = "USER_NOTE")
 data class User(
-        var name: String? = null,
+        var firstname: String? = null,
+        var lastname: String? = null,
+        var patronymic: String? = null,
         var email: String? = null,
         var password: String? = null,
         var enabled: Boolean = true,
@@ -20,7 +22,9 @@ data class User(
 ) : AbstractEntity() {
 
         constructor(userDto: UserDto) : this(
-                userDto.name,
+                userDto.firstname,
+                userDto.lastname,
+                userDto.patronymic,
                 userDto.email,
                 userDto.password,
                 true,
@@ -28,10 +32,12 @@ data class User(
         )
 
         fun updateFromDto(userDto: UserDto): User {
-                this.name = userDto.name
-                this.email = userDto.email
-                this.password = userDto.password
-                this.modifyDate = LocalDateTime.now()
-                return this
+            this.firstname = userDto.firstname
+            this.firstname = userDto.lastname
+            this.firstname = userDto.patronymic
+            this.email = userDto.email
+            this.password = userDto.password
+            this.modifyDate = LocalDateTime.now()
+            return this
         }
 }

@@ -21,9 +21,9 @@ import ru.notes.repository.NoteRepository
 
 @SpringComponent
 @UIScope
-class NoteEditor : VerticalLayout(), KeyNotifier {
-    @Autowired
-    private lateinit var noteRepository: NoteRepository
+class NoteEditor(@Autowired
+                 private val noteRepository: NoteRepository
+) : VerticalLayout(), KeyNotifier {
     private val title = TextField("", "title")
     private val tag = TextField("", "tag")
     private val description = TextField("", "description")
@@ -65,11 +65,7 @@ class NoteEditor : VerticalLayout(), KeyNotifier {
         editorDiv.isVisible = false
     }
 
-    fun editNote(note: Note?) {
-        if (note == null) {
-            editorDiv.isVisible = true
-            return
-        }
+    fun editNote(note: Note) {
         this.note = noteRepository.findById(note.id).orElse(note)
         binder.bean = this.note
 //        binder.readBean(note)

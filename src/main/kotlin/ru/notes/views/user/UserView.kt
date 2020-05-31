@@ -20,12 +20,13 @@ import com.vaadin.flow.router.Route
 import ru.notes.backend.Employee
 import ru.notes.views.main.MainView
 
-@Route(value = "form", layout = MainView::class)
+@Route(value = "registration", layout = MainView::class)
 @PageTitle("User")
 @CssImport("./styles/views/user/user-view.css")
 class UserView : Div() {
     private val firstname = TextField()
     private val lastname = TextField()
+    private val patronymic = TextField()
     private val email = TextField()
     private val notes = TextArea()
     private val cancel = Button("Cancel")
@@ -64,6 +65,7 @@ class UserView : Div() {
         val formLayout = FormLayout()
         addFormItem(wrapper, formLayout, firstname, "First name")
         addFormItem(wrapper, formLayout, lastname, "Last name")
+        addFormItem(wrapper, formLayout, patronymic, "Patronymic")
         val emailFormItem = addFormItem(wrapper, formLayout,
                 email, "Email")
         formLayout.setColspan(emailFormItem, 2)

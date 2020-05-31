@@ -23,61 +23,53 @@ import ru.notes.views.main.MainView
 @CssImport("./styles/views/notes/notes-view.css")
 
 class NotesView(private val noteEditor: NoteEditor) : Div() {
-    private val filter = TextField()
-    private val addNewNoteButton = Button("New note", VaadinIcon.PLUS.create())
+    private val NEW_NOTE_BUTTON = "New note"
+    private val grid: Grid<Note> = initGrid()
+    private val filter = initFilter()
+    private val addNewNoteButton = initNewNoteButton()
     private val toolbar = HorizontalLayout(filter, addNewNoteButton)
-    private val grid: Grid<Note> = Grid()
+    private val wrapper = initGridLayout(grid)
+    private val splitLayout = initSplitLayout(wrapper)
 
     init {
         setId("notes-view")
-        initGrid()
-        initFilter()
-        editNoteListener() //connect selected line to editor or hide if none is selected
-        addNoteListener()  //edit new Note the new button is clicked
         refreshDataFromBackend()
-        add(toolbar, grid, noteEditor)
-        val splitLayout = SplitLayout()
-        splitLayout.setSizeFull()
-        createGridLayout(splitLayout)
-        noteEditor.createEditorLayout(splitLayout)
+        add(toolbar)
         add(splitLayout)
     }
 
-    private fun initGrid() {
+    private fun initGrid(): Grid<Note> {
+        val grid: Grid<Note> = Grid()
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        grid.addColumn { it.description }.setHeader("description")
-        grid.addColumn { it.tag }.setHeader("tag")
         grid.addColumn { it.title }.setHeader("title")
+        grid.addColumn { it.tag }.setHeader("tag")
+        grid.addColumn { it.description }.setHeader("description")
         grid.setItems(noteEditor.getAll(""))
+        grid.asSingleSelect() //edit new Note the new button or delete button is clicked
+                .addValueChangeListener {
+                    if (it.value != null)
+                        noteEditor.editNote(it.value)
+                    // if new or delete button is clicked it.value==null
+                }
+        return grid
     }
 
-    private fun initFilter() {
+    private fun initFilter(): TextField {
+        val filter = TextField()
         filter.placeholder = "filter"
         filter.valueChangeMode = ValueChangeMode.EAGER
         filter.addValueChangeListener {
             grid.setItems(noteEditor.getAll(filter.value))
         }
+        return filter
     }
 
-    private fun editNoteListener() {
-        grid.asSingleSelect()
-                .addValueChangeListener {
-                    noteEditor.editNote(it.value)
-                }
-    }
-
-    private fun addNoteListener() {
+    private fun initNewNoteButton(): Button {
+        val addNewNoteButton = Button(NEW_NOTE_BUTTON, VaadinIcon.PLUS.create())
         addNewNoteButton.addClickListener {
             noteEditor.editNote(Note(null, null, null))
         }
-    }
-
-    private fun createGridLayout(splitLayout: SplitLayout) {
-        val wrapper = Div()
-        wrapper.setId("wrapper")
-        wrapper.setWidthFull()
-        splitLayout.addToPrimary(wrapper)
-        wrapper.add(grid)
+        return addNewNoteButton
     }
 
     private fun refreshDataFromBackend() {
@@ -87,5 +79,21 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
                 grid.setItems(noteEditor.getAll(filter.value))
             }
         })
+    }
+
+    private fun initGridLayout(grid: Grid<Note>): Div {
+        val wrapper = Div()
+        wrapper.setId("wrapper")
+        wrapper.setWidthFull()
+        wrapper.add(grid)
+        return wrapper
+    }
+
+    private fun initSplitLayout(wrapper: Div): SplitLayout {
+        val splitLayout = SplitLayout()
+        splitLayout.setSizeFull()
+        splitLayout.addToPrimary(wrapper)
+        noteEditor.createEditorLayout(splitLayout)
+        return splitLayout
     }
 }

@@ -3,8 +3,6 @@ package ru.notes.service
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.notes.dto.UserDto
@@ -28,8 +26,8 @@ class UserServiceImpl
     }
 
     @Transactional(readOnly = true)
-    override fun getAll(pageable: Pageable): Page<User> {
-        return userRepository.findAll(pageable)
+    override fun getAll(): List<User> {
+        return userRepository.findAll()
     }
 
     @Transactional(readOnly = true)
@@ -53,4 +51,9 @@ class UserServiceImpl
     @Transactional
     override fun delete(id: Long) =
             userRepository.delete(get(id))
+
+    override fun findUsers(text: String): List<User>? =
+            userRepository
+                    .findByName(text)
+
 }

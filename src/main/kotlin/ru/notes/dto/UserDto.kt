@@ -6,6 +6,8 @@ package ru.notes.dto
  * Date: 2020-04-28
  */
 class UserDto
-constructor(val name: String?,
+constructor(val firstname: String?,
+            val lastname: String?,
+            val patronymic: String?,
             val email: String?,
             val password: String?)

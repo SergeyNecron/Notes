@@ -23,7 +23,6 @@ USER gradle
 RUN cd /home && \
 git clone https://github.com/SergeyNecron/notes.git && \
 cd ${PROJECT_DIR}
-#COPY ./ ${PROJECT_DIR}/notes
 # build project
 RUN gradle build && \
 npm install && \

@@ -13,13 +13,14 @@ import com.vaadin.flow.component.splitlayout.SplitLayout
 import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.binder.Binder
+import com.vaadin.flow.data.value.ValueChangeMode
 import com.vaadin.flow.router.AfterNavigationEvent
 import com.vaadin.flow.router.AfterNavigationObserver
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Autowired
-import ru.notes.backend.BackendService
-import ru.notes.backend.Employee
+import ru.notes.model.User
+import ru.notes.service.UserService
 import ru.notes.views.main.MainView
 
 @Route(value = "users", layout = MainView::class)
@@ -27,45 +28,57 @@ import ru.notes.views.main.MainView
 @CssImport("./styles/views/users/users-view.css")
 class UsersView : Div(), AfterNavigationObserver {
     @Autowired
-    private lateinit var service: BackendService
-    private val employees: Grid<Employee>
+    private lateinit var service: UserService
     private val firstname = TextField()
     private val lastname = TextField()
+    private val patronymic = TextField()
     private val email = TextField()
     private val password = PasswordField()
     private val cancel = Button("Cancel")
     private val save = Button("Save")
-    private val binder: Binder<Employee>
+    private val filter = TextField()
+    private val binder: Binder<User>
+    private val grid: Grid<User> = Grid()
 
     init {
         setId("users-view")
-        // Configure Grid
-        employees = Grid()
-        employees.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        employees.setHeightFull()
-        employees.addColumn { it.firstname }.setHeader("First name")
-        employees.addColumn { it.lastname }.setHeader("Last name")
-        employees.addColumn { it.email }.setHeader("Email")
-
+        initGrid()
+        initFilter()
         //when a row is selected or deselected, populate form
-        employees.asSingleSelect().addValueChangeListener { populateForm(it.value) }
+        grid.asSingleSelect().addValueChangeListener { populateForm(it.value) }
 
         // Configure Form
-        binder = Binder(Employee::class.java)
+        binder = Binder(User::class.java)
 
         // Bind fields. This where you'd define e.g. validation rules
         binder.bindInstanceFields(this)
         // note that password field isn't bound since that property doesn't exist in
-        // Employee
+
 
         // the grid valueChangeEvent will clear the form too
-        cancel.addClickListener { employees.asSingleSelect().clear() }
+        cancel.addClickListener { grid.asSingleSelect().clear() }
         save.addClickListener { Notification.show("Not implemented") }
         val splitLayout = SplitLayout()
         splitLayout.setSizeFull()
         createGridLayout(splitLayout)
         createEditorLayout(splitLayout)
         add(splitLayout)
+    }
+
+    private fun initGrid() {
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
+        grid.addColumn { it.firstname }.setHeader("firstname")
+        grid.addColumn { it.lastname }.setHeader("lastname")
+        grid.addColumn { it.patronymic }.setHeader("patronymic")
+        grid.addColumn { it.email }.setHeader("email")
+    }
+
+    private fun initFilter() {
+        filter.placeholder = "filter"
+        filter.valueChangeMode = ValueChangeMode.EAGER
+        filter.addValueChangeListener {
+            grid.setItems(service.findUsers(filter.value))
+        }
     }
 
     private fun createEditorLayout(splitLayout: SplitLayout) {
@@ -96,7 +109,7 @@ class UsersView : Div(), AfterNavigationObserver {
         wrapper.setId("wrapper")
         wrapper.setWidthFull()
         splitLayout.addToPrimary(wrapper)
-        wrapper.add(employees)
+        wrapper.add(grid)
     }
 
     private fun addFormItem(wrapper: Div, formLayout: FormLayout,
@@ -117,10 +130,10 @@ class UsersView : Div(), AfterNavigationObserver {
 
         // Lazy init of the grid items, happens only when we are sure the ru.notes.view will be
         // shown to the user
-        employees.setItems(service.employees)
+        grid.setItems(service.getAll())
     }
 
-    private fun populateForm(value: Employee) {
+    private fun populateForm(value: User) {
         // Value can be null as well, that clears the form
         binder.readBean(value)
 
