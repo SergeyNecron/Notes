@@ -19,25 +19,25 @@ data class User(
                 cascade = [CascadeType.ALL],
                 orphanRemoval = true)
         var notes: Set<Note>
-) : AbstractEntity() {
+) : BaseEntity() {
 
-        constructor(userDto: UserDto) : this(
-                userDto.firstname,
-                userDto.lastname,
-                userDto.patronymic,
-                userDto.email,
-                userDto.password,
-                true,
-                HashSet<Note>()
-        )
+    constructor(userDto: UserDto) : this(
+            userDto.firstname,
+            userDto.lastname,
+            userDto.patronymic,
+            userDto.email,
+            userDto.password,
+            true,
+            HashSet<Note>()
+    )
 
-        fun updateFromDto(userDto: UserDto): User {
-            this.firstname = userDto.firstname
-            this.firstname = userDto.lastname
-            this.firstname = userDto.patronymic
-            this.email = userDto.email
-            this.password = userDto.password
-            this.modifyDate = LocalDateTime.now()
-            return this
-        }
+    fun updateFromDto(userDto: UserDto): User {
+        this.firstname = userDto.firstname
+        this.firstname = userDto.lastname
+        this.firstname = userDto.patronymic
+        this.email = userDto.email
+        this.password = userDto.password
+        this.modifyDate = LocalDateTime.now()
+        return this
+    }
 }

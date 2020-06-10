@@ -14,7 +14,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 30M
+          memory: 50M
     restart: always
   web:
     depends_on:

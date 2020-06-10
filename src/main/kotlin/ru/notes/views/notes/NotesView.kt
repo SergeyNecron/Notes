@@ -13,7 +13,7 @@ import com.vaadin.flow.data.value.ValueChangeMode
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
-import ru.notes.model.Note
+import ru.notes.dto.NoteDtoOut
 import ru.notes.views.component.NoteEditor
 import ru.notes.views.main.MainView
 
@@ -21,30 +21,33 @@ import ru.notes.views.main.MainView
 @RouteAlias(value = "", layout = MainView::class)
 @PageTitle("Notes")
 @CssImport("./styles/views/notes/notes-view.css")
-
 class NotesView(private val noteEditor: NoteEditor) : Div() {
-    private val NEW_NOTE_BUTTON = "New note"
-    private val grid: Grid<Note> = initGrid()
+    private val grid: Grid<NoteDtoOut> = initGrid()
     private val filter = initFilter()
-    private val addNewNoteButton = initNewNoteButton()
-    private val toolbar = HorizontalLayout(filter, addNewNoteButton)
-    private val wrapper = initGridLayout(grid)
-    private val splitLayout = initSplitLayout(wrapper)
 
-    init {
-        setId("notes-view")
-        refreshDataFromBackend()
-        add(toolbar)
-        add(splitLayout)
+    companion object {
+        const val NEW_NOTE_BUTTON = "New note"
     }
 
-    private fun initGrid(): Grid<Note> {
-        val grid: Grid<Note> = Grid()
+    init {
+        val addNewNoteButton = initNewNoteButton()
+        val toolbar = HorizontalLayout(filter, addNewNoteButton)
+        val wrapper = initGridLayout(grid)
+        val splitLayout = initSplitLayout(wrapper)
+        setId("notes-view")
+        add(toolbar)
+        add(splitLayout)
+        refreshDataFromBackend()
+    }
+
+    private fun initGrid(): Grid<NoteDtoOut> {
+        val grid: Grid<NoteDtoOut> = Grid()
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
         grid.addColumn { it.title }.setHeader("title")
         grid.addColumn { it.tag }.setHeader("tag")
         grid.addColumn { it.description }.setHeader("description")
         grid.setItems(noteEditor.getAll(""))
+        grid.setHeightFull()
         grid.asSingleSelect() //edit new Note the new button or delete button is clicked
                 .addValueChangeListener {
                     if (it.value != null)
@@ -67,21 +70,12 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
     private fun initNewNoteButton(): Button {
         val addNewNoteButton = Button(NEW_NOTE_BUTTON, VaadinIcon.PLUS.create())
         addNewNoteButton.addClickListener {
-            noteEditor.editNote(Note(null, null, null))
+            noteEditor.editNote(NoteDtoOut())
         }
         return addNewNoteButton
     }
 
-    private fun refreshDataFromBackend() {
-        noteEditor.setChangeHandler(object : NoteEditor.ChangeHandler {
-            override fun onChange() {
-                noteEditor.isVisible = false
-                grid.setItems(noteEditor.getAll(filter.value))
-            }
-        })
-    }
-
-    private fun initGridLayout(grid: Grid<Note>): Div {
+    private fun initGridLayout(grid: Grid<NoteDtoOut>): Div {
         val wrapper = Div()
         wrapper.setId("wrapper")
         wrapper.setWidthFull()
@@ -95,5 +89,14 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
         splitLayout.addToPrimary(wrapper)
         noteEditor.createEditorLayout(splitLayout)
         return splitLayout
+    }
+
+    private fun refreshDataFromBackend() {
+        noteEditor.setChangeHandler(object : NoteEditor.ChangeHandler {
+            override fun onChange() {
+                noteEditor.isVisible = false
+                grid.setItems(noteEditor.getAll(filter.value))
+            }
+        })
     }
 }

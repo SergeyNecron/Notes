@@ -15,14 +15,13 @@ import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.spring.annotation.SpringComponent
 import com.vaadin.flow.spring.annotation.UIScope
 import org.springframework.beans.factory.annotation.Autowired
-import ru.notes.model.Note
-import ru.notes.repository.NoteRepository
-
+import ru.notes.dto.NoteDtoOut
+import ru.notes.service.NoteService
 
 @SpringComponent
 @UIScope
-class NoteEditor(@Autowired
-                 private val noteRepository: NoteRepository
+class NoteEditor @Autowired constructor(
+        private val service: NoteService
 ) : VerticalLayout(), KeyNotifier {
     private val title = TextField("", "title")
     private val tag = TextField("", "tag")
@@ -30,10 +29,13 @@ class NoteEditor(@Autowired
     private val save = Button("Save")
     private val cancel = Button("Cancel")
     private val delete = Button("Delete")
-    private val binder = Binder(Note::class.java)
-    private var note: Note = Note(null, null, null)
+
+    private val binder = Binder(NoteDtoOut::class.java)
+    private var noteDto = NoteDtoOut()
+
     private lateinit var changeHandler: ChangeHandler
-    val editorDiv = Div()
+    var editorDiv = Div()
+
     init {
         binder.bindInstanceFields(this) // bind using naming convention
         configureAndStyleComponents()
@@ -54,20 +56,22 @@ class NoteEditor(@Autowired
     }
 
     private fun save() {
-        noteRepository.save(note)
+        if (noteDto.id == 0L)
+            service.addNote(noteDto)
+        else service.updateNote(noteDto.id, noteDto)
         changeHandler.onChange()
         editorDiv.isVisible = false
     }
 
     private fun delete() {
-        noteRepository.delete(note)
+        service.deleteNote(noteDto.id)
         changeHandler.onChange()
         editorDiv.isVisible = false
     }
 
-    fun editNote(note: Note) {
-        this.note = noteRepository.findById(note.id).orElse(note)
-        binder.bean = this.note
+    fun editNote(dto: NoteDtoOut) {
+        this.noteDto = dto
+        binder.bean = this.noteDto
 //        binder.readBean(note)
         editorDiv.isVisible = true
         title.focus()
@@ -82,6 +86,7 @@ class NoteEditor(@Autowired
     }
 
     fun createEditorLayout(splitLayout: SplitLayout) {
+        editorDiv = Div()
         editorDiv.setId("editor-layout")
         editorDiv.isVisible = false
         val formLayout = FormLayout()
@@ -110,8 +115,6 @@ class NoteEditor(@Autowired
         field.element.classList.add("full-width")
     }
 
-    fun getAll(name: String): List<Note>? =
-            if (name.isEmpty())
-                noteRepository.findAll() else
-                noteRepository.findByName(name)
+    fun getAll(name: String): List<NoteDtoOut>? =
+            service.findNotes(name)
 }

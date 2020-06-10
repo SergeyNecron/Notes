@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.notes.dto.NoteDtoIn
 import ru.notes.dto.NoteDtoOut
 import ru.notes.exception.NotFoundException
 import ru.notes.model.Note
@@ -38,8 +37,8 @@ class NoteServiceImpl
             NoteDtoOut(getNoteById(id))
 
     @Transactional
-    override fun addNote(noteDtoIn: NoteDtoIn): NoteDtoOut =
-            NoteDtoOut(noteRepository.save(noteDtoIn.convertToNote()))
+    override fun addNote(noteDtoOut: NoteDtoOut): NoteDtoOut =
+            NoteDtoOut(noteRepository.save(Note(noteDtoOut)))
 
 
     @Transactional
@@ -50,10 +49,12 @@ class NoteServiceImpl
     override fun deleteNote(id: Long) =
             noteRepository.delete(getNoteById(id))
 
-    override fun findNotes(text: String): List<NoteDtoOut>? =
-            noteRepository
-                    .findByName(text)
+    override fun findNotes(text: String): List<NoteDtoOut>? {
+        return if (text.isEmpty())
+            getAllNotes() else
+            noteRepository.findByName(text)
                     ?.map { NoteDtoOut(it) }
+    }
 
     private fun getNoteById(id: Long): Note =
             noteRepository

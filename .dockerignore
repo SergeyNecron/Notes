@@ -1,0 +1,14 @@
+*git*
+.gradle/
+.idea/
+build/
+gradle/
+node_modules/
+*.bat
+*.js
+.dockerignore
+composeRun.bat
+docker-compose.yml
+Dockerfile
+HELP.md
+package-lock.json

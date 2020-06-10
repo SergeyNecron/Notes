@@ -32,6 +32,13 @@ class MainView : AppLayout() {
         selectTab()
     }
 
+    init {
+        primarySection = Section.DRAWER
+        addToNavbar(true, DrawerToggle())
+        menu = createMenuTabs()
+        addToDrawer(menu)
+    }
+
     private fun selectTab() {
         val target = RouteConfiguration.forSessionScope().getUrl(content.javaClass)
         val tabToSelect = menu.children.filter { tab: Component ->
@@ -77,10 +84,5 @@ class MainView : AppLayout() {
         }
     }
 
-    init {
-        primarySection = Section.DRAWER
-        addToNavbar(true, DrawerToggle())
-        menu = createMenuTabs()
-        addToDrawer(menu)
-    }
+
 }

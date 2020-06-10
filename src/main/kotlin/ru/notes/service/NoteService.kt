@@ -1,7 +1,5 @@
 package ru.notes.service
 
-import org.springframework.stereotype.Service
-import ru.notes.dto.NoteDtoIn
 import ru.notes.dto.NoteDtoOut
 import ru.notes.exception.NoteServiceException
 
@@ -10,7 +8,7 @@ import ru.notes.exception.NoteServiceException
  * @author Sergey Muratkin
  * Date: 2020-04-18
  */
-@Service
+
 interface NoteService {
 
     @Throws(NoteServiceException::class)
@@ -20,7 +18,7 @@ interface NoteService {
     fun getNote(id: Long): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun addNote(noteDtoIn: NoteDtoIn): NoteDtoOut
+    fun addNote(noteDtoOut: NoteDtoOut): NoteDtoOut
 
     @Throws(NoteServiceException::class)
     fun updateNote(id: Long, noteDtoOut: NoteDtoOut): NoteDtoOut

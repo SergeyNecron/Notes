@@ -18,7 +18,13 @@ data class Note(
         var description: String?,
         @ManyToOne(fetch = FetchType.LAZY)
         private val user: User? = null
-) : AbstractEntity() {
+) : BaseEntity() {
+
+    constructor(dto: NoteDtoOut) : this(
+            dto.title,
+            dto.tag,
+            dto.description
+    )
 
     fun updateFromDto(dto: NoteDtoOut): Note {
         this.title = dto.title

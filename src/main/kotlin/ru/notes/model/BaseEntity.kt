@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @MappedSuperclass
-abstract class AbstractEntity {
+abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
