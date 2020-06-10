@@ -1,5 +1,6 @@
 package ru.notes.service
 
+import ru.notes.dto.NoteDtoIn
 import ru.notes.dto.NoteDtoOut
 import ru.notes.exception.NoteServiceException
 
@@ -18,7 +19,7 @@ interface NoteService {
     fun getNote(id: Long): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun addNote(noteDtoOut: NoteDtoOut): NoteDtoOut
+    fun addNote(noteDtoIn: NoteDtoIn): NoteDtoOut
 
     @Throws(NoteServiceException::class)
     fun updateNote(id: Long, noteDtoOut: NoteDtoOut): NoteDtoOut

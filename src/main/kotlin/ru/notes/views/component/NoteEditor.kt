@@ -15,6 +15,7 @@ import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.spring.annotation.SpringComponent
 import com.vaadin.flow.spring.annotation.UIScope
 import org.springframework.beans.factory.annotation.Autowired
+import ru.notes.dto.NoteDtoIn
 import ru.notes.dto.NoteDtoOut
 import ru.notes.service.NoteService
 
@@ -57,7 +58,7 @@ class NoteEditor @Autowired constructor(
 
     private fun save() {
         if (noteDto.id == 0L)
-            service.addNote(noteDto)
+            service.addNote(NoteDtoIn(noteDto.title, noteDto.tag, noteDto.description))
         else service.updateNote(noteDto.id, noteDto)
         changeHandler.onChange()
         editorDiv.isVisible = false
