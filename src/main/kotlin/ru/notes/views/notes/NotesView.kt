@@ -14,6 +14,7 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
 import ru.notes.dto.NoteDtoOut
+import ru.notes.views.component.ChangeHandler
 import ru.notes.views.component.NoteEditor
 import ru.notes.views.main.MainView
 
@@ -90,7 +91,7 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
     }
 
     private fun refreshDataFromBackend() {
-        noteEditor.setChangeHandler(object : NoteEditor.ChangeHandler {
+        noteEditor.setChangeHandler(object : ChangeHandler {
             override fun onChange() {
                 noteEditor.isVisible = false
                 grid.setItems(noteEditor.getAll(filter.value))
