@@ -41,13 +41,11 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
     }
 
     private fun initGrid(): Grid<NoteDtoOut> {
-        val grid: Grid<NoteDtoOut> = Grid()
+        val grid = Grid(NoteDtoOut::class.java)
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        grid.addColumn { it.title }.setHeader("title")
-        grid.addColumn { it.tag }.setHeader("tag")
-        grid.addColumn { it.description }.setHeader("description")
-        grid.setItems(noteEditor.getAll(""))
+        grid.setColumns("title", "tag", "description")
         grid.setHeightFull()
+        grid.setItems(noteEditor.getAll(""))
         grid.asSingleSelect() //edit new Note the new button or delete button is clicked
                 .addValueChangeListener {
                     if (it.value != null)

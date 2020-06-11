@@ -24,9 +24,12 @@ import ru.notes.service.NoteService
 class NoteEditor @Autowired constructor(
         private val service: NoteService
 ) : VerticalLayout(), KeyNotifier {
+    /* Fields to edit properties in NoteDtoOut */
     private val title = TextField("", "title")
     private val tag = TextField("", "tag")
     private val description = TextField("", "description")
+
+    /* Action buttons */
     private val save = Button("Save")
     private val cancel = Button("Cancel")
     private val delete = Button("Delete")

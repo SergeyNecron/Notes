@@ -31,6 +31,7 @@ class NoteServiceImpl
             noteRepository
                     .findAll()
                     .map { NoteDtoOut(it) }
+                    .sortedBy { it.id }
 
 
     @Transactional(readOnly = true)
@@ -55,6 +56,7 @@ class NoteServiceImpl
             getAllNotes() else
             noteRepository.findByName(text)
                     ?.map { NoteDtoOut(it) }
+                    ?.sortedBy { it.id }
     }
 
     private fun getNoteById(id: Long): Note =
