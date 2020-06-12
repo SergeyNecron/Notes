@@ -42,13 +42,11 @@ class UserEditor @Autowired constructor(
             service.add(UserDtoIn(userDto))
         else service.update(userDto.id, userDto)
         changeHandler.onChange()
-        editorDiv.isVisible = false
     }
 
     override fun delete() {
         service.delete(userDto.id)
         changeHandler.onChange()
-        editorDiv.isVisible = false
     }
 
     fun editUser(dto: UserDtoOut) {

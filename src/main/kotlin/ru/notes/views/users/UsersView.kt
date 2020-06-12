@@ -93,6 +93,7 @@ class UsersView(private val userEditor: UserEditor) : Div() {
         userEditor.setChangeHandler(object : ChangeHandler {
             override fun onChange() {
                 grid.setItems(userEditor.getAll(filter.value))
+                userEditor.editorDiv.isVisible = false
             }
         })
     }

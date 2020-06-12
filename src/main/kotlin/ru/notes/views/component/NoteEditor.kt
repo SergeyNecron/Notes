@@ -40,13 +40,11 @@ class NoteEditor @Autowired constructor(
             service.addNote(NoteDtoIn(noteDto))
         else service.updateNote(noteDto.id, noteDto)
         changeHandler.onChange()
-        editorDiv.isVisible = false
     }
 
     override fun delete() {
         if (service.deleteNote(noteDto.id)) {
             changeHandler.onChange()
-            editorDiv.isVisible = false
         }
     }
 

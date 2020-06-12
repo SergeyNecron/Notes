@@ -94,6 +94,7 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
         noteEditor.setChangeHandler(object : ChangeHandler {
             override fun onChange() {
                 grid.setItems(noteEditor.getAll(filter.value))
+                noteEditor.editorDiv.isVisible = false
             }
         })
     }
