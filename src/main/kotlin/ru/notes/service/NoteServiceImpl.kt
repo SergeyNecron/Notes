@@ -48,8 +48,10 @@ class NoteServiceImpl
             NoteDtoOut(noteRepository.save(getNoteById(id).updateFromDto(noteDtoOut)))
 
     @Transactional
-    override fun deleteNote(id: Long) =
-            noteRepository.delete(getNoteById(id))
+    override fun deleteNote(id: Long): Boolean {
+        noteRepository.delete(getNoteById(id))
+        return true
+    }
 
     override fun findNotes(text: String): List<NoteDtoOut>? {
         return if (text.isEmpty())

@@ -93,7 +93,6 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
     private fun refreshDataFromBackend() {
         noteEditor.setChangeHandler(object : ChangeHandler {
             override fun onChange() {
-                noteEditor.isVisible = false
                 grid.setItems(noteEditor.getAll(filter.value))
             }
         })

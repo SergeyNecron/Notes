@@ -12,6 +12,13 @@ class NoteDtoIn(
         private val tag: String?,
         private val description: String?
 ) {
+
+    constructor(dto: NoteDtoOut) : this(
+            dto.title,
+            dto.tag,
+            dto.description
+    )
+
     fun convertToNote(): Note =
             Note(title,
                     tag,

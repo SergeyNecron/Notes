@@ -17,7 +17,7 @@ abstract class Editor : VerticalLayout(), KeyNotifier {
     private val cancel = Button("Cancel")
     private val delete = Button("Delete")
 
-    var editorDiv = Div()
+    abstract var editorDiv: Div
 
     init {
         configureAndStyleComponents()

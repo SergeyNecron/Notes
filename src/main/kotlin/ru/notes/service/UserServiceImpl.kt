@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.notes.dto.UserDto
+import ru.notes.dto.UserDtoIn
+import ru.notes.dto.UserDtoOut
 import ru.notes.exception.NotFoundException
 import ru.notes.model.User
 import ru.notes.repository.UserRepository
@@ -26,34 +27,46 @@ class UserServiceImpl
     }
 
     @Transactional(readOnly = true)
-    override fun getAll(): List<User> {
-        return userRepository.findAll()
+    override fun getAll(): List<UserDtoOut> {
+        return userRepository
+                .findAll()
+                .map { UserDtoOut(it) }
+                .sortedBy { it.id }
     }
 
     @Transactional(readOnly = true)
-    override fun get(id: Long): User =
+    override fun get(id: Long): UserDtoOut =
+            UserDtoOut(getUserById(id))
+
+    @Transactional
+    override fun add(userDtoIn: UserDtoIn): UserDtoOut =
+            UserDtoOut(userRepository.save(userDtoIn.convertToUser()))
+
+    @Transactional
+    override fun update(id: Long, userDtoOut: UserDtoOut): UserDtoOut =
+            UserDtoOut(userRepository.save(getUserById(id).updateFromDto(userDtoOut)))
+
+    @Transactional
+    override fun delete(id: Long): Boolean {
+        val user = getUserById(id)
+//        if(user == null ) return false
+        userRepository.delete(user)
+        return true
+    }
+
+    override fun findUsers(text: String): List<UserDtoOut>? {
+        return if (text.isEmpty())
+            getAll() else
+            userRepository.findByName(text)
+                    ?.map { UserDtoOut(it) }
+                    ?.sortedBy { it.id }
+    }
+
+    fun getUserById(id: Long): User =
             userRepository
                     .findById(id)
                     .orElseThrow {
                         log.error("User with id: $id not found")
                         NotFoundException(id)
                     }
-
-
-    @Transactional
-    override fun add(userDto: UserDto): User =
-            userRepository.save(User(userDto))
-
-    @Transactional
-    override fun update(id: Long, userDto: UserDto): User =
-            userRepository.save(get(id).updateFromDto(userDto))
-
-    @Transactional
-    override fun delete(id: Long) =
-            userRepository.delete(get(id))
-
-    override fun findUsers(text: String): List<User>? =
-            userRepository
-                    .findByName(text)
-
 }

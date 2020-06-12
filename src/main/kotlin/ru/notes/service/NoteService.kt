@@ -25,7 +25,7 @@ interface NoteService {
     fun updateNote(id: Long, noteDtoOut: NoteDtoOut): NoteDtoOut
 
     @Throws(NoteServiceException::class)
-    fun deleteNote(id: Long)
+    fun deleteNote(id: Long): Boolean
 
     @Throws(NoteServiceException::class)
     fun findNotes(text: String): List<NoteDtoOut>?

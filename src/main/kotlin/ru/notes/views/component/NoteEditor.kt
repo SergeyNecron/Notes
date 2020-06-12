@@ -25,6 +25,7 @@ class NoteEditor @Autowired constructor(
     private val binder = Binder(NoteDtoOut::class.java)
     private var noteDto = NoteDtoOut()
     private lateinit var changeHandler: ChangeHandler
+    override lateinit var editorDiv: Div
 
     init {
         binder.bindInstanceFields(this) // bind using naming convention
@@ -36,16 +37,17 @@ class NoteEditor @Autowired constructor(
 
     override fun save() {
         if (noteDto.id == 0L)
-            service.addNote(NoteDtoIn(noteDto.title, noteDto.tag, noteDto.description))
+            service.addNote(NoteDtoIn(noteDto))
         else service.updateNote(noteDto.id, noteDto)
         changeHandler.onChange()
         editorDiv.isVisible = false
     }
 
     override fun delete() {
-        service.deleteNote(noteDto.id)
-        changeHandler.onChange()
-        editorDiv.isVisible = false
+        if (service.deleteNote(noteDto.id)) {
+            changeHandler.onChange()
+            editorDiv.isVisible = false
+        }
     }
 
     fun editNote(dto: NoteDtoOut) {

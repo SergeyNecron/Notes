@@ -17,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
-import ru.notes.dto.UserDto
+import ru.notes.dto.UserDtoIn
 import ru.notes.views.main.MainView
 
 @Route(value = "registration", layout = MainView::class)
@@ -40,7 +40,7 @@ class UserView : Div() {
         createButtonLayout(wrapper)
 
         // Configure Form
-        val binder = Binder(UserDto::class.java)
+        val binder = Binder(UserDtoIn::class.java)
 
         // Bind fields. This where you'd define e.g. validation rules
         binder.bindInstanceFields(this)

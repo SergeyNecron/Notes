@@ -1,8 +1,10 @@
 package ru.notes.model
 
-import ru.notes.dto.UserDto
+import ru.notes.dto.UserDtoIn
+import ru.notes.dto.UserDtoOut
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 //syntax error at or near "user"
@@ -13,25 +15,27 @@ data class User(
         var patronymic: String? = null,
         var email: String? = null,
         var password: String? = null,
-        var enabled: Boolean = true,
-        @OneToMany(mappedBy = "user",
-                fetch = FetchType.LAZY,
-                cascade = [CascadeType.ALL],
-                orphanRemoval = true)
-        var notes: Set<Note>
+        var enabled: Boolean = true
+//        ,
+//        @OneToMany(mappedBy = "user",
+//                fetch = FetchType.LAZY,
+//                cascade = [CascadeType.ALL],
+//                orphanRemoval = true)
+//        var notes: Set<Note>
 ) : BaseEntity() {
 
-    constructor(userDto: UserDto) : this(
+    constructor(userDto: UserDtoIn) : this(
             userDto.firstname,
             userDto.lastname,
             userDto.patronymic,
             userDto.email,
             userDto.password,
-            true,
-            HashSet<Note>()
+            true
+//            ,
+//            HashSet<Note>()
     )
 
-    fun updateFromDto(userDto: UserDto): User {
+    fun updateFromDto(userDto: UserDtoOut): User {
         this.firstname = userDto.firstname
         this.firstname = userDto.lastname
         this.firstname = userDto.patronymic

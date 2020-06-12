@@ -1,9 +1,9 @@
 package ru.notes.service
 
-import ru.notes.dto.UserDto
+import ru.notes.dto.UserDtoIn
+import ru.notes.dto.UserDtoOut
 import ru.notes.exception.NoteServiceException
 import ru.notes.exception.UserServiceException
-import ru.notes.model.User
 
 /**
  *
@@ -14,20 +14,20 @@ import ru.notes.model.User
 interface UserService {
 
     @Throws(UserServiceException::class)
-    fun getAll(): List<User>
+    fun getAll(): List<UserDtoOut>
 
     @Throws(UserServiceException::class)
-    fun get(id: Long): User
+    fun get(id: Long): UserDtoOut
 
     @Throws(UserServiceException::class)
-    fun add(userDto: UserDto): User
+    fun add(userDto: UserDtoIn): UserDtoOut
 
     @Throws(UserServiceException::class)
-    fun update(id: Long, userDto: UserDto): User
+    fun update(id: Long, userDtoOut: UserDtoOut): UserDtoOut
 
     @Throws(UserServiceException::class)
-    fun delete(id: Long)
+    fun delete(id: Long): Boolean
 
     @Throws(NoteServiceException::class)
-    fun findUsers(text: String): List<User>?
+    fun findUsers(text: String): List<UserDtoOut>?
 }
