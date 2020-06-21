@@ -1,5 +1,5 @@
 package ru.notes.views.component
 
 interface ChangeHandler {
-    fun onChange()
+    fun updateTable()
 }

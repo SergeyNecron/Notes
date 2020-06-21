@@ -2,6 +2,7 @@ package ru.notes.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
+import ru.notes.config.DATE_FORMAT
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -13,11 +14,11 @@ abstract class BaseEntity {
     @JsonIgnore
     val id: Long = -1
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @Column(name = "create_date")
     val createDate: LocalDateTime = LocalDateTime.now()
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @Column(name = "modify_date")
     var modifyDate: LocalDateTime = LocalDateTime.now()
 }

@@ -1,7 +1,11 @@
 #note-view {
     display: block;
+    padding: 1rem;
+    width: 90%;
+    justify-content: center;
 }
 
 :host {
     display: block;
+    padding: 1rem;
 }

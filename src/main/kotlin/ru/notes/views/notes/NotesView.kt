@@ -13,6 +13,7 @@ import com.vaadin.flow.data.value.ValueChangeMode
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
+import ru.notes.config.*
 import ru.notes.dto.NoteDtoOut
 import ru.notes.views.component.ChangeHandler
 import ru.notes.views.component.NoteEditor
@@ -23,42 +24,40 @@ import ru.notes.views.main.MainView
 @PageTitle("Notes")
 @CssImport("./styles/views/notes/notes-view.css")
 class NotesView(private val noteEditor: NoteEditor) : Div() {
+
     private val grid: Grid<NoteDtoOut> = initGrid()
     private val filter = initFilter()
 
-    companion object {
-        const val NEW_NOTE_BUTTON = "New note"
-    }
-
     init {
-        val addNewNoteButton = initNewNoteButton()
-        val toolbar = HorizontalLayout(filter, addNewNoteButton)
+        setId(Style.NOTES_CSS)
+        val newNoteButton = initNewNoteButton()
+        val toolbar = HorizontalLayout(filter, newNoteButton)
         val wrapper = initGridLayout(grid)
-        val splitLayout = initSplitLayout(wrapper)
-        setId("notes-view")
+        val editor = noteEditor.initEditorLayout()
+        val splitLayout = initSplitLayout(wrapper, editor)
         add(toolbar)
         add(splitLayout)
-        refreshDataFromBackend()
+        setUpdateTable()
     }
 
     private fun initGrid(): Grid<NoteDtoOut> {
         val grid = Grid(NoteDtoOut::class.java)
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER)
-        grid.setColumns("title", "tag", "description")
+        grid.setColumns(TITLE_COLUMN, TAG_COLUMN, DESCRIPTION_COLUMN)
         grid.setHeightFull()
         grid.setItems(noteEditor.getAll(""))
         grid.asSingleSelect() //edit new Note the new button or delete button is clicked
                 .addValueChangeListener {
-                    if (it.value != null)
+                    if (it.value != null) // if new or delete button is clicked it.value==null
                         noteEditor.editNote(it.value)
-                    // if new or delete button is clicked it.value==null
                 }
         return grid
     }
 
     private fun initFilter(): TextField {
+        setId(Style.FILTER_CSS)
         val filter = TextField()
-        filter.placeholder = "filter"
+        filter.placeholder = ENTER_FILTER_NAME
         filter.valueChangeMode = ValueChangeMode.EAGER
         filter.addValueChangeListener {
             grid.setItems(noteEditor.getAll(filter.value))
@@ -76,23 +75,23 @@ class NotesView(private val noteEditor: NoteEditor) : Div() {
 
     private fun initGridLayout(grid: Grid<NoteDtoOut>): Div {
         val wrapper = Div()
-        wrapper.setId("wrapper")
+        wrapper.setId(Style.WRAPPER_CSS)
         wrapper.setWidthFull()
         wrapper.add(grid)
         return wrapper
     }
 
-    private fun initSplitLayout(wrapper: Div): SplitLayout {
+    private fun initSplitLayout(table: Div, editor: Div): SplitLayout {
         val splitLayout = SplitLayout()
         splitLayout.setSizeFull()
-        splitLayout.addToPrimary(wrapper)
-        noteEditor.createEditorLayout(splitLayout)
+        splitLayout.addToPrimary(table)
+        splitLayout.addToSecondary(editor)
         return splitLayout
     }
 
-    private fun refreshDataFromBackend() {
+    private fun setUpdateTable() {
         noteEditor.setChangeHandler(object : ChangeHandler {
-            override fun onChange() {
+            override fun updateTable() {
                 grid.setItems(noteEditor.getAll(filter.value))
                 noteEditor.editorDiv.isVisible = false
             }

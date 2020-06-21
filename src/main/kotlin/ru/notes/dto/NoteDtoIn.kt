@@ -7,10 +7,10 @@ import ru.notes.model.Note
  * @author Sergey Muratkin
  * Date: 2020-04-20
  */
-class NoteDtoIn(
-        private val title: String?,
-        private val tag: String?,
-        private val description: String?
+data class NoteDtoIn(
+        private val title: String = "",
+        private val tag: String = "",
+        private val description: String = ""
 ) {
 
     constructor(dto: NoteDtoOut) : this(
@@ -19,9 +19,9 @@ class NoteDtoIn(
             dto.description
     )
 
-    fun convertToNote(): Note =
-            Note(title,
-                    tag,
-                    description
-            )
+    fun convertToNote() = Note(
+            title,
+            tag,
+            description
+    )
 }

@@ -2,6 +2,7 @@
     display: block;
     height: 100%;
     flex-direction: column;
+    padding: 1rem;
 }
 
 :host {
@@ -12,13 +13,7 @@
 
 #editor-layout {
     padding: var(--lumo-space-l);
-    width: 400px;
-}
-
-#button-layout {
-    width: 100%;
-    flex-wrap: wrap-reverse;
-    justify-content: flex-end;
+    width: 600px;
 }
 
 #users-view #wrapper {

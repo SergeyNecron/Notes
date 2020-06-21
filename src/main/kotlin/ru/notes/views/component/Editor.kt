@@ -1,21 +1,26 @@
 package ru.notes.views.component
 
+import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.KeyNotifier
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.formlayout.FormLayout
+import com.vaadin.flow.component.formlayout.FormLayout.FormItem
 import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.component.textfield.TextField
+import ru.notes.config.CANCEL
+import ru.notes.config.DELETE
+import ru.notes.config.SAVE
+import ru.notes.config.Style
 
 abstract class Editor : VerticalLayout(), KeyNotifier {
-    /* Action buttons */
-    private val save = Button("Save")
-    private val cancel = Button("Cancel")
-    private val delete = Button("Delete")
+
+    private val save = Button(SAVE)
+    val cancel = Button(CANCEL)
+    val delete = Button(DELETE)
 
     abstract var editorDiv: Div
 
@@ -26,8 +31,8 @@ abstract class Editor : VerticalLayout(), KeyNotifier {
 
     private fun configureAndStyleComponents() {
         isSpacing = true
-        save.element.themeList.add("primary")
-        delete.element.themeList.add("error")
+        save.element.themeList.add(Style.FIELD_PRIMARY_CSS)
+        delete.element.themeList.add(Style.FIELD_ERROR_CSS)
         addKeyPressListener(Key.ENTER, ComponentEventListener { save() })
     }
 
@@ -37,22 +42,23 @@ abstract class Editor : VerticalLayout(), KeyNotifier {
         cancel.addClickListener { editorDiv.isVisible = false }
     }
 
-    protected fun createButtonLayout(editorDiv: Div) {
+    fun createButtonLayout(): HorizontalLayout {
         val buttonLayout = HorizontalLayout()
-        buttonLayout.setId("button-layout")
+        buttonLayout.setId(Style.BUTTON_CSS)
         buttonLayout.setWidthFull()
         buttonLayout.isSpacing = true
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
         buttonLayout.add(cancel, save, delete)
-        editorDiv.add(buttonLayout)
+        return buttonLayout
     }
 
     protected fun addFormItem(wrapper: Div, formLayout: FormLayout,
-                              field: TextField, fieldName: String) {
-        formLayout.addFormItem(field, fieldName)
+                              field: Component, fieldName: String): FormItem {
+        val formItem = formLayout.addFormItem(field, fieldName)
         wrapper.add(formLayout)
-        field.element.classList.add("full-width")
+        field.element.classList.add(Style.FIELD_WIDTH_CSS)
+        return formItem
     }
 
     abstract fun save()

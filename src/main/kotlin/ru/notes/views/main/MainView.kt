@@ -13,6 +13,7 @@ import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.server.PWA
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
+import ru.notes.config.*
 import ru.notes.views.note.NoteView
 import ru.notes.views.notes.NotesView
 import ru.notes.views.user.UserView
@@ -53,7 +54,7 @@ class MainView : AppLayout() {
             val tabs = Tabs()
             tabs.orientation = Tabs.Orientation.VERTICAL
             tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL)
-            tabs.setId("tabs")
+            tabs.setId(TABS)
             tabs.add(*availableTabs)
             return tabs
         }
@@ -61,10 +62,10 @@ class MainView : AppLayout() {
         private val availableTabs: Array<Tab>
             get() {
                 val tabs: MutableList<Tab> = ArrayList()
-                tabs.add(createTab("Notes", NotesView::class.java))
-                tabs.add(createTab("Note", NoteView::class.java))
-                tabs.add(createTab("Users", UsersView::class.java))
-                tabs.add(createTab("User", UserView::class.java))
+                tabs.add(createTab(NOTES_TAB, NotesView::class.java))
+                tabs.add(createTab(NOTE_TAB, NoteView::class.java))
+                tabs.add(createTab(USERS_TAB, UsersView::class.java))
+                tabs.add(createTab(USER_TAB, UserView::class.java))
                 return tabs.toTypedArray()
             }
 

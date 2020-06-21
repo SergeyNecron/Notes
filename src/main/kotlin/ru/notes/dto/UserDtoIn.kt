@@ -7,27 +7,33 @@ import ru.notes.model.User
  * @author Sergey Muratkin
  * Date: 2020-04-28
  */
-class UserDtoIn(
-        val firstname: String?,
-        val lastname: String?,
-        val patronymic: String?,
-        val email: String?,
-        val password: String?
+data class UserDtoIn(
+        var firstName: String = "",
+        var lastName: String = "",
+        var patronymic: String = "",
+//       var login: String = "",
+        var password: String = "",
+        var repeatPassword: String = "",
+        var email: String = ""
 ) {
 
     constructor(dto: UserDtoOut) : this(
-            dto.firstname,
-            dto.lastname,
+            dto.firstName,
+            dto.lastName,
             dto.patronymic,
-            dto.email,
-            dto.password
+//            dto.login,
+            "",
+            "",
+            dto.email
     )
 
-    fun convertToUser(): User =
-            User(firstname,
-                    lastname,
-                    patronymic,
-                    email,
-                    password
-            )
+    fun convertToUser() = User(
+            firstName,
+            lastName,
+            patronymic,
+//            login,
+            email,
+            password,
+            true
+    )
 }

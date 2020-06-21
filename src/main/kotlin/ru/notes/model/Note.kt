@@ -13,9 +13,9 @@ import javax.persistence.ManyToOne
  */
 @Entity
 data class Note(
-        var title: String?,
-        var tag: String?,
-        var description: String?,
+        var title: String = "",
+        var tag: String = "",
+        var description: String = "",
         @ManyToOne(fetch = FetchType.LAZY)
         private val user: User? = null
 ) : BaseEntity() {

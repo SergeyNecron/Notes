@@ -1,34 +1,32 @@
 package ru.notes.dto
 
 import ru.notes.model.User
-import java.time.LocalDateTime
 
 /**
  *
  * @author Sergey Muratkin
  * Date: 2020-04-28
  */
-class UserDtoOut
-constructor(
+data class UserDtoOut(
         val id: Long,
-        var firstname: String?,
-        var lastname: String?,
-        var patronymic: String?,
-        var email: String?,
-        var password: String?,
-        val createDate: LocalDateTime?,
-        val modifyDate: LocalDateTime?) {
+        var firstName: String = "",
+        var lastName: String = "",
+        var patronymic: String = "",
+//        val login: String = "",
+//        @Email(message = "правильный e-mail")
+        var email: String = "",
+        var enabled: Boolean
+) {
 
-    constructor() : this(0L, null, null, null, null, null, null, null)
+    constructor() : this(0L, "", "", "", "", false)
 
     constructor(user: User) : this(
             user.id,
             user.firstname,
             user.lastname,
             user.patronymic,
+//            user.login,
             user.email,
-            user.password,
-            user.createDate,
-            user.modifyDate
+            user.enabled
     )
 }

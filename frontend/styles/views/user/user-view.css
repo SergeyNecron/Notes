@@ -1,6 +1,8 @@
 #user-view {
     display: block;
     padding: 1rem;
+    width: 40%;
+    justify-content: center;
 }
 
 :host {
@@ -8,8 +10,3 @@
     padding: 1rem;
 }
 
-#button-layout {
-    width: 100%;
-    flex-wrap: wrap-reverse;
-    justify-content: flex-end;
-}

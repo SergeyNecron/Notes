@@ -1,6 +1,5 @@
 package ru.notes.model
 
-import ru.notes.dto.UserDtoIn
 import ru.notes.dto.UserDtoOut
 import java.time.LocalDateTime
 import javax.persistence.Entity
@@ -10,11 +9,12 @@ import javax.persistence.Table
 //syntax error at or near "user"
 @Table(name = "USER_NOTE")
 data class User(
-        var firstname: String? = null,
-        var lastname: String? = null,
-        var patronymic: String? = null,
-        var email: String? = null,
-        var password: String? = null,
+        var firstname: String = "",  // переименовать
+        var lastname: String = "",
+        var patronymic: String = "",
+//        var login: String = "",      //добавить chengeset в базу
+        var email: String = "",
+        var password: String = "",
         var enabled: Boolean = true
 //        ,
 //        @OneToMany(mappedBy = "user",
@@ -24,23 +24,13 @@ data class User(
 //        var notes: Set<Note>
 ) : BaseEntity() {
 
-    constructor(userDto: UserDtoIn) : this(
-            userDto.firstname,
-            userDto.lastname,
-            userDto.patronymic,
-            userDto.email,
-            userDto.password,
-            true
-//            ,
-//            HashSet<Note>()
-    )
-
-    fun updateFromDto(userDto: UserDtoOut): User {
-        this.firstname = userDto.firstname
-        this.firstname = userDto.lastname
-        this.firstname = userDto.patronymic
-        this.email = userDto.email
-        this.password = userDto.password
+    fun updateFromDto(dto: UserDtoOut): User {
+        this.firstname = dto.firstName
+        this.lastname = dto.lastName
+        this.patronymic = dto.patronymic
+//        this.login = dto.login
+        this.email = dto.email
+        this.enabled = dto.enabled
         this.modifyDate = LocalDateTime.now()
         return this
     }

@@ -7,92 +7,95 @@ import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.formlayout.FormLayout.FormItem
 import com.vaadin.flow.component.html.Div
-import com.vaadin.flow.component.html.H1
-import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.component.textfield.TextArea
+import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import org.springframework.beans.factory.annotation.Autowired
+import ru.notes.config.*
 import ru.notes.dto.UserDtoIn
+import ru.notes.service.UserService
 import ru.notes.views.main.MainView
 
 @Route(value = "registration", layout = MainView::class)
 @PageTitle("User")
 @CssImport("./styles/views/user/user-view.css")
-class UserView : Div() {
-    private val firstname = TextField()
-    private val lastname = TextField()
-    private val patronymic = TextField()
-    private val email = TextField()
-    private val notes = TextArea()
-    private val cancel = Button("Cancel")
-    private val save = Button("Save")
+class UserView @Autowired constructor(
+        private val service: UserService
+) : Div() {
+    private var userDtoIn = UserDtoIn()
+
+    /* Fields to edit properties in UserDtoOut */
+    private val firstName = TextField("", ENTER_FIRST_NAME)
+    private val lastName = TextField("", ENTER_LAST_NAME)
+    private val patronymic = TextField("", ENTER_PATRONYMIC)
+
+    //    private val login = TextField("", ENTER_LOGIN)
+    private val password = PasswordField("", ENTER_PASSWORD)
+    private val repeatPassword = PasswordField("", ENTER_REPEAT_PASSWORD)
+    private val email = TextField("", ENTER_EMAIL)
+
+    /* Action buttons */
+    private val save = Button(REGISTRATION)
+
+    private val binder = Binder(UserDtoIn::class.java)
 
     init {
-        setId("user-view")
-        val wrapper = createWrapper()
-        createTitle(wrapper)
-        createFormLayout(wrapper)
-        createButtonLayout(wrapper)
-
-        // Configure Form
-        val binder = Binder(UserDtoIn::class.java)
-
-        // Bind fields. This where you'd define e.g. validation rules
+        setId(Style.USER_CSS)
         binder.bindInstanceFields(this)
-        cancel.addClickListener { binder.readBean(null) }
-        save.addClickListener { Notification.show("Not implemented") }
+        binder.bean = this.userDtoIn
+        val wrapper = createWrapper()
+        val formLayout = createFormLayout()
+        val buttonLayout = createButtonLayout()
+        wrapper.add(formLayout)
+        wrapper.add(buttonLayout)
         add(wrapper)
-    }
-
-    private fun createTitle(wrapper: VerticalLayout) {
-        val h1 = H1("Form")
-        wrapper.add(h1)
     }
 
     private fun createWrapper(): VerticalLayout {
         val wrapper = VerticalLayout()
-        wrapper.setId("wrapper")
-        wrapper.isSpacing = false
+        wrapper.setId(Style.WRAPPER_CSS)
         return wrapper
     }
 
-    private fun createFormLayout(wrapper: VerticalLayout) {
+    private fun createFormLayout(): FormLayout {
         val formLayout = FormLayout()
-        addFormItem(wrapper, formLayout, firstname, "First name")
-        addFormItem(wrapper, formLayout, lastname, "Last name")
-        addFormItem(wrapper, formLayout, patronymic, "Patronymic")
-        val emailFormItem = addFormItem(wrapper, formLayout,
-                email, "Email")
-        formLayout.setColspan(emailFormItem, 2)
-        val notesFormItem = addFormItem(wrapper, formLayout,
-                notes, "Notes")
-        formLayout.setColspan(notesFormItem, 2)
+        addFormItem(formLayout, firstName, FIRST_NAME)
+        addFormItem(formLayout, lastName, LAST_NAME)
+        addFormItem(formLayout, patronymic, PATRONYMIC)
+//        addFormItem(formLayout, login, LOGIN)
+        addFormItem(formLayout, password, PASSWORD)
+        addFormItem(formLayout, repeatPassword, REPEAT_PASSWORD)
+        addFormItem(formLayout, email, EMAIL)
+        return formLayout
     }
 
-    private fun createButtonLayout(wrapper: VerticalLayout) {
-        val buttonLayout = HorizontalLayout()
-        buttonLayout.addClassName("button-layout")
-        buttonLayout.setWidthFull()
-        buttonLayout.justifyContentMode = FlexComponent.JustifyContentMode.END
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
-        buttonLayout.add(cancel)
-        buttonLayout.add(save)
-        wrapper.add(buttonLayout)
-    }
-
-    private fun addFormItem(wrapper: VerticalLayout,
-                            formLayout: FormLayout, field: Component, fieldName: String): FormItem {
+    private fun addFormItem(formLayout: FormLayout, field: Component, fieldName: String
+    ): FormItem {
         val formItem = formLayout.addFormItem(field, fieldName)
-        wrapper.add(formLayout)
-        field.element.classList.add("full-width")
+        field.element.classList.add(Style.FIELD_WIDTH_CSS)
         return formItem
     }
 
+    private fun createButtonLayout(): HorizontalLayout {
+        val buttonLayout = HorizontalLayout()
+        buttonLayout.addClassName(Style.BUTTON_CSS)
+        buttonLayout.setWidthFull()
+        buttonLayout.justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+        save.addClickListener { save() }
+        buttonLayout.add(save)
+        return buttonLayout
+    }
+
+    private fun save() {
+        service.add(userDtoIn)
+        this.userDtoIn = UserDtoIn()
+        binder.bean = this.userDtoIn
+    }
 
 }
