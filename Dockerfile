@@ -18,13 +18,13 @@ RUN mkdir ${PROJECT_DIR}
 WORKDIR ${PROJECT_DIR}
 
 # add user
-RUN adduser -D --home ${GRADLE_HOME} --shell /bin/bash gradle
+RUN adduser -D --home ${PROJECT_DIR} --shell /bin/bash user
 
 # copy project
 COPY ./ ${PROJECT_DIR}
-RUN chown gradle:gradle -R ${PROJECT_DIR}
+RUN chown user:user -R ${PROJECT_DIR}
 
-USER gradle
+USER user
 
 # build project
 RUN gradle build
@@ -34,8 +34,8 @@ RUN npm install
 RUN chmod +x entrypoint.sh
 RUN chmod +x ./build/libs/fine-note.jar
 
-#CMD sh entrypoint.sh -port $PORT
-CMD top -b
+CMD sh entrypoint.sh -port $PORT
+#CMD top -b
 
 ENV DATASOURCE_POSTGRES_URL=jdbc:postgresql://pg:5432
 ENV DATASOURCE_POSTGRES_USERNAME=postgres

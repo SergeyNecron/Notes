@@ -20,7 +20,7 @@ interface UserService {
     fun get(id: Long): UserDtoOut
 
     @Throws(UserServiceException::class)
-    fun add(userDto: UserDtoIn): UserDtoOut
+    fun add(userDtoIn: UserDtoIn): UserDtoOut
 
     @Throws(UserServiceException::class)
     fun update(id: Long, userDtoOut: UserDtoOut): UserDtoOut

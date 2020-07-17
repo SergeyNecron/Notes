@@ -8,4 +8,4 @@ sudo apt install -y git && \
 cd ~ && \
 git clone https://github.com/SergeyNecron/notes.git && \
 cd notes && \
-docker-compose up
+sudo docker-compose up
